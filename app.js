@@ -5,7 +5,10 @@ const logger= require("./config/logger");
 const userRouter=require("./api/users/user.router");
 const adopterRouter = require("./api/adopter/adopter.router");
 const donorRouter = require("./api/donor/donor.router");
-
+const petRouter = require("./api/pet/pet.router");
+const animalRouter = require("./api/animal/animal.router");
+const breedRouter = require("./api/breed/breed.router");
+const vaccinationRouter = require("./api/vaccination/vaccination.router");
 app.use(express.json());
 app.use((req,res,next)=>{
  logger.info(req.body);
@@ -17,9 +20,11 @@ app.use((req,res,next)=>{
  }
  next();
 });
-
+app.use("/api/vaccination", vaccinationRouter);
+app.use("/api/breed", breedRouter);
+app.use("/api/animal", animalRouter);
 app.use("/uploads", express.static("uploads"));
-
+app.use("/api/pet", petRouter);
 app.use("/api/donor", donorRouter);
 app.use("/api/adopter", adopterRouter);
 app.use("/api/users",userRouter);
