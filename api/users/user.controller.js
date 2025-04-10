@@ -76,16 +76,35 @@ const {
       });
     },
   
-    deleteUser: (req, res) => {
-      const id = req.params.id;
-      deleteUser(id, (err, result) => {
-        if (err) return res.status(500).json({ success: 0, message: "DB Error" });
-        return res.status(200).json({ success: 1, message: "User deleted" });
-      });
-    },
+    deleteUser:(req,res)=>{
+        const data =req.body;
+           
+            deleteUser(data,(err,results)=>{
+                if (err) {
+                    console.log(err);
+                    return res.status(500).json({
+                        success: 0,
+                        message: "Database Connection Error "+err,
+                    });  // return here to prevent further code execution
+                }
+                if(!results)
+                {
+                    return res.json(
+                        {
+                            success:0,
+                            message:"Record not Found"
+                        }
+                    );
+                }
+                return res.json({
+                    success:200,
+                    data:"User Deleted SucessFully"
+                });
+            })
+        },
     login: (req, res) => {
         const body = req.body;
-        getUserByUserEmail(body.email, (err, results) => {
+        getUserByEmail(body.email, (err, results) => {
             if (err) {
                 console.log(err);
             }

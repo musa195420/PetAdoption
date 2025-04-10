@@ -5,7 +5,7 @@ let refreshTokens = []; // In-memory store (use DB or Redis in production)
 
 module.exports = {
     generateAccessToken: (user) => {
-        return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
+        return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
     },
 
     generateRefreshToken: (user) => {

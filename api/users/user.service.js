@@ -37,20 +37,48 @@ module.exports = {
 
   updateUser: (data, callBack) => {
     const { user_id, email, phone_number, role, device_id } = data;
-    pool.query(
-      `UPDATE Users SET email = ?, phone_number = ?, role = ?, device_id = ? WHERE user_id = ?`,
-      [email, phone_number, role, device_id, user_id],
-      (error, results) => {
-        if (error) return callBack(error);
-        return callBack(null, results);
-      }
-    );
+  
+    // Build fields and values dynamically
+    const fields = [];
+    const values = [];
+  
+    if (email !== null && email !== undefined) {
+      fields.push('email = ?');
+      values.push(email);
+      console.log(`email ${email}`);
+    }
+    if (phone_number !== null && phone_number !== undefined) {
+      fields.push('phone_number = ?');
+      values.push(phone_number);
+    }
+    if (role !== null && role !== undefined) {
+      fields.push('role = ?');
+      values.push(role);
+    }
+    if (device_id !== null && device_id !== undefined) {
+      fields.push('device_id = ?');
+      values.push(device_id);
+    }
+  
+    if (fields.length === 0) {
+      return callBack(new Error('No valid fields to update.'));
+    }
+  
+    values.push(user_id); // Add user_id for WHERE clause
+  
+    const sql = `UPDATE Users SET ${fields.join(', ')} WHERE user_id = ?`;
+  
+    pool.query(sql, values, (error, results) => {
+      if (error) return callBack(error);
+      return callBack(null, results);
+    });
   },
+  
 
-  deleteUser: (id, callBack) => {
+  deleteUser: (data, callBack) => {
     pool.query(
       `DELETE FROM Users WHERE user_id = ?`,
-      [id],
+      [data.user_id],
       (error, results) => {
         if (error) return callBack(error);
         return callBack(null, results);
