@@ -57,7 +57,7 @@ const {
     deleteDonor: (req, res) => {
         console.log(`id => `);
       const data = req.body;
-      console.log(`id => ${data.user_id}`);
+     
       deleteDonor(data, (err, results) => {
         if (err) {
           console.log(err);

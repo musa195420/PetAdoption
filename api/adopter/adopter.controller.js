@@ -54,7 +54,7 @@ const {
     },
   
     deleteAdopter: (req, res) => {
-      const data = req.data;
+      const data = req.body;
       deleteAdopter(data, (err, results) => {
         if (err) {
           console.log(err);

@@ -1,11 +1,20 @@
-const { petSchema} =require("./pet.schema");
+const { pet} =require("./pet.schema");
 
-const addPetValidation = (req, res, next) => {
-    const { error } = petSchema.validate(req.body);
-    if (error) {
-        return res.status(400).json({ success: 0, message: error.details[0].message });
+const addPetValidation = async(req, res, next) => {
+    {
+        const value= await pet.validate(req.body);
+        if(value.error)
+        {
+            res.json(
+                {
+                    success:0,
+                    message:value.error.details[0].message
+                }
+            )
+        }else{
+            next();
+        }
     }
-    next();
 };
 
 module.exports = { addPetValidation };
