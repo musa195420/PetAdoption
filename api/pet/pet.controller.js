@@ -8,13 +8,13 @@ module.exports = {
             if (err) {
                 console.log(err);
                 return res.status(500).json({
-                    success: 0,
+                    success: 400,
                     message: "Database Error: " + err
                 });
             }
 
             return res.status(200).json({
-                success: 1,
+               success: 200,
                 message: "Pet created successfully",
                 data: results
             });
@@ -24,10 +24,10 @@ module.exports = {
     fetchAllPets: (req, res) => {
         getAllPets((err, results) => {
             if (err) {
-                return res.status(500).json({ success: 0, message: "Failed to fetch pets" });
+                return res.status(500).json({ success: 400, message: "Failed to fetch pets" });
             }
 
-            return res.json({ success: 1, data: results });
+            return res.json({success: 200, data: results });
         });
     },
 
@@ -36,12 +36,12 @@ module.exports = {
 
         getPetById(id, (err, results) => {
             if (err) {
-                return res.status(500).json({ success: 0, message: "Error fetching pet" });
+                return res.status(500).json({ success: 400, message: "Error fetching pet" });
             }
             if (!results) {
-                return res.json({ success: 0, message: "Pet not found" });
+                return res.json({ success: 400, message: "Pet not found" });
             }
-            return res.json({ success: 1, data: results });
+            return res.json({success: 200, data: results });
         });
     },
     deletePetById: (req, res) => {
@@ -50,20 +50,20 @@ module.exports = {
         deletePet(id, (err, results) => {
             if (err) {
                 return res.status(500).json({
-                    success: 0,
+                    success: 400,
                     message: "Database Error: " + err,
                 });
             }
     
             if (results.affectedRows === 0) {
                 return res.status(404).json({
-                    success: 0,
+                    success: 400,
                     message: "Pet not found",
                 });
             }
     
             return res.json({
-                success: 1,
+               success: 200,
                 message: "Pet deleted successfully",
             });
         });

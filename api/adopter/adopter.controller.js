@@ -12,9 +12,9 @@ const {
       createAdopterProfile(body, (err, results) => {
         if (err) {
           console.log(err);
-          return res.status(500).json({ success: 0, message: "Database Error "+err });
+          return res.status(500).json({ success: 400, message: "Database Error "+err });
         }
-        return res.status(200).json({ success: 1, data: results });
+        return res.status(200).json({success: 200, data: results });
       });
     },
   
@@ -23,12 +23,12 @@ const {
       getAdopterById(id, (err, result) => {
         if (err) {
           console.log(err);
-          return res.status(500).json({ success: 0, message: "Database Error" });
+          return res.status(500).json({ success: 400, message: "Database Error" });
         }
         if (!result) {
-          return res.status(404).json({ success: 0, message: "Adopter not found" });
+          return res.status(404).json({ success: 400, message: "Adopter not found" });
         }
-        return res.status(200).json({ success: 1, data: result });
+        return res.status(200).json({success: 200, data: result });
       });
     },
   
@@ -36,9 +36,9 @@ const {
       getAllAdopters((err, results) => {
         if (err) {
           console.log(err);
-          return res.status(500).json({ success: 0, message: "Database Error" });
+          return res.status(500).json({ success: 400, message: "Database Error" });
         }
-        return res.status(200).json({ success: 1, data: results });
+        return res.status(200).json({success: 200, data: results });
       });
     },
   
@@ -47,9 +47,9 @@ const {
       updateAdopter(body, (err, results) => {
         if (err) {
           console.log(err);
-          return res.status(500).json({ success: 0, message: "Database Error" });
+          return res.status(500).json({ success: 400, message: "Database Error" });
         }
-        return res.status(200).json({ success: 1, message: "Adopter updated successfully" });
+        return res.status(200).json({success: 200, message: "Adopter updated successfully" });
       });
     },
   
@@ -58,9 +58,9 @@ const {
       deleteAdopter(data, (err, results) => {
         if (err) {
           console.log(err);
-          return res.status(500).json({ success: 0, message: "Database Error" });
+          return res.status(500).json({ success: 400, message: "Database Error" });
         }
-        return res.status(200).json({ success: 1, message: "Adopter deleted successfully" });
+        return res.status(200).json({success: 200, message: "Adopter deleted successfully" });
       });
     },
   };

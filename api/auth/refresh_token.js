@@ -16,12 +16,16 @@ module.exports = {
 
     refreshTokenHandler: (req, res) => {
         const { token } = req.body;
-        if (!token) return res.sendStatus(401);
-        if (!refreshTokens.includes(token)) return res.sendStatus(403);
-
+    
+        if (!token) return res.status(401).json({ message: "Refresh token required" });
+        if (!refreshTokens.includes(token)) return res.status(403).json({ message: "Invalid refresh token" });
+    
         jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-            if (err) return res.sendStatus(403);
-            const accessToken = jwt.sign({ id: user.id, email: user.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
+            if (err) return res.status(403).json({ message: "Invalid refresh token" });
+    
+            const payload = { id: user.id, email: user.email };
+            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
+    
             res.json({ accessToken });
         });
     },

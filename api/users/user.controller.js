@@ -18,9 +18,9 @@ const {
   
       createUser(body, (err, results) => {
         if (err) {
-          return res.status(500).json({ success: 0, message: "DB error", error: err });
+          return res.status(500).json({ success: 400, message: "DB error", error: err });
         }
-        return res.status(201).json({ success: 1, data: results });
+        return res.status(201).json({success: 200, data: results });
       });
     },
   
@@ -29,12 +29,12 @@ const {
   
       getUserByEmail(body.email, (err, user) => {
         if (err || !user) {
-          return res.status(400).json({ success: 0, message: "Invalid Email or Password" });
+          return res.status(400).json({ success: 400, message: "Invalid Email or Password" });
         }
   
         const isValid = compareSync(body.password, user.password);
         if (!isValid) {
-          return res.status(400).json({ success: 0, message: "Invalid Email or Password" });
+          return res.status(400).json({ success: 400, message: "Invalid Email or Password" });
         }
   
         user.password = undefined;
@@ -43,7 +43,7 @@ const {
         const refreshToken = generateRefreshToken(payload);
   
         return res.status(200).json({
-          success: 1,
+         success: 200,
           message: "Login successful",
           accessToken,
           refreshToken,
@@ -54,25 +54,25 @@ const {
   
     getAllUsers: (req, res) => {
       getUsers((err, results) => {
-        if (err) return res.status(500).json({ success: 0, message: "DB Error" });
-        return res.status(200).json({ success: 1, data: results });
+        if (err) return res.status(500).json({ success: 400, message: "DB Error" });
+        return res.status(200).json({success: 200, data: results });
       });
     },
   
     getUserById: (req, res) => {
       const id = req.params.id;
       getUserById(id, (err, result) => {
-        if (err) return res.status(500).json({ success: 0, message: "DB Error" });
-        if (!result) return res.status(404).json({ success: 0, message: "User not found" });
-        return res.status(200).json({ success: 1, data: result });
+        if (err) return res.status(500).json({ success: 400, message: "DB Error" });
+        if (!result) return res.status(404).json({ success: 400, message: "User not found" });
+        return res.status(200).json({success: 200, data: result });
       });
     },
   
     updateUser: (req, res) => {
       const data = req.body;
       updateUser(data, (err, result) => {
-        if (err) return res.status(500).json({ success: 0, message: "DB Error" });
-        return res.status(200).json({ success: 1, message: "User updated" });
+        if (err) return res.status(500).json({ success: 400, message: "DB Error" });
+        return res.status(200).json({success: 200, message: "User updated" });
       });
     },
   
@@ -83,7 +83,7 @@ const {
                 if (err) {
                     console.log(err);
                     return res.status(500).json({
-                        success: 0,
+                        success: 400,
                         message: "Database Connection Error "+err,
                     });  // return here to prevent further code execution
                 }
@@ -110,7 +110,7 @@ const {
             }
             if (!results) {
                 return res.json({
-                    success: 0,
+                    success: 400,
                     data: "Invalid Email or Password"
                 });
             }
@@ -124,7 +124,7 @@ const {
                 const refreshToken = generateRefreshToken(userPayload);
     
                 return res.json({
-                    success: 200,
+                   success: 200,
                     message: "Login successful",
                     accessToken,
                     refreshToken
