@@ -1,54 +1,61 @@
-const pool = require("../../config/database");
+const supabase = require("../../config/database");
 
 module.exports = {
-  createAdopterProfile: (data, callBack) => {
-    pool.query(
-      `INSERT INTO AdopterProfile (user_id, name, location, is_active) VALUES (?, ?, ?, ?)`,
-      [data.user_id, data.name, data.location, data.is_active],
-      (err, results) => {
-        if (err) return callBack(err);
-        return callBack(null, results);
-      }
-    );
+  createAdopterProfile: async (data) => {
+    const { error, data: result } = await supabase
+      .from("adopterprofile")
+      .insert([
+        {
+         adopter_id: data.adopter_id,
+          name: data.name,
+          location: data.location,
+          is_active: data.is_active,
+        },
+      ]);
+
+    if (error) throw error;
+    return result;
   },
 
-  getAdopterById: (id, callBack) => {
-    pool.query(
-      `SELECT * FROM AdopterProfile WHERE user_id = ?`,
-      [id],
-      (err, results) => {
-        if (err) return callBack(err);
-        return callBack(null, results[0]);
-      }
-    );
+  getAdopterById: async (id) => {
+    const { data, error } = await supabase
+      .from("adopterprofile")
+      .select("*")
+      .eq("adopter_id", id)
+      .single(); // since we expect one result
+
+    if (error) throw error;
+    return data;
   },
 
-  getAllAdopters: (callBack) => {
-    pool.query(`SELECT * FROM AdopterProfile`, [], (err, results) => {
-      if (err) return callBack(err);
-      return callBack(null, results);
-    });
+  getAllAdopters: async () => {
+    const { data, error } = await supabase.from("adopterprofile").select("*");
+
+    if (error) throw error;
+    return data;
   },
 
-  updateAdopter: (data, callBack) => {
-    pool.query(
-      `UPDATE AdopterProfile SET name = ?, location = ?, is_active = ? WHERE user_id = ?`,
-      [data.name, data.location, data.is_active, data.user_id],
-      (err, results) => {
-        if (err) return callBack(err);
-        return callBack(null, results);
-      }
-    );
+  updateAdopter: async (data) => {
+    const { error, data: result } = await supabase
+      .from("adopterprofile")
+      .update({
+        name: data.name,
+        location: data.location,
+        is_active: data.is_active,
+      })
+      .eq("adopter_id", data.adopter_id);
+
+    if (error) throw error;
+    return result;
   },
 
-  deleteAdopter: (data, callBack) => {
-    pool.query(
-      `DELETE FROM AdopterProfile WHERE user_id = ?`,
-      [data.user_id],
-      (err, results) => {
-        if (err) return callBack(err);
-        return callBack(null, results);
-      }
-    );
+  deleteAdopter: async (user_id) => {
+    const { error, data } = await supabase
+      .from("adopterprofile")
+      .delete()
+      .eq("adopter_id", user_id);
+
+    if (error) throw error;
+    return data;
   },
 };

@@ -1,55 +1,83 @@
-const pool = require("../../config/database");
+const supabase = require("../../config/database");
 
 module.exports = {
-  createDonorProfile: (data, callBack) => {
-    pool.query(
-      `INSERT INTO DonorProfile (user_id, name, location, is_active) VALUES (?, ?, ?, ?)`,
-      [data.user_id, data.name, data.location, data.is_active],
-      (err, results) => {
-        if (err) return callBack(err);
-        return callBack(null, results);
-      }
-    );
+  createDonorProfile: async (data) => {
+    try {
+      const { error, data: result } = await supabase
+        .from("donorprofile")
+        .insert([
+          {
+            donor_id: data.donor_id,
+            name: data.name,
+            location: data.location,
+            is_active: data.is_active,
+          },
+        ]);
+
+      if (error) throw error;
+      return result;
+    } catch (err) {
+      throw new Error(err.message);
+    }
   },
 
-  getDonorById: (id, callBack) => {
-    
-    pool.query(
-      `SELECT * FROM DonorProfile WHERE user_id = ?`,
-      [id],
-      (err, results) => {
-        if (err) return callBack(err);
-        return callBack(null, results[0]);
-      }
-    );
+  getDonorById: async (id) => {
+    try {
+      const { data: result, error } = await supabase
+        .from("donorprofile")
+        .select("*")
+        .eq("donor_id", id)
+        .single();
+
+      if (error) throw error;
+      return result;
+    } catch (err) {
+      throw new Error(err.message);
+    }
   },
 
-  getAllDonors: (callBack) => {
-    pool.query(`SELECT * FROM DonorProfile`, [], (err, results) => {
-      if (err) return callBack(err);
-      return callBack(null, results);
-    });
+  getAllDonors: async () => {
+    try {
+      const { data: results, error } = await supabase
+        .from("donorprofile")
+        .select("*");
+
+      if (error) throw error;
+      return results;
+    } catch (err) {
+      throw new Error(err.message);
+    }
   },
 
-  updateDonor: (data, callBack) => {
-    pool.query(
-      `UPDATE DonorProfile SET name = ?, location = ?, is_active = ? WHERE user_id = ?`,
-      [data.name, data.location, data.is_active, data.user_id],
-      (err, results) => {
-        if (err) return callBack(err);
-        return callBack(null, results);
-      }
-    );
+  updateDonor: async (data) => {
+    try {
+      const { error, data: result } = await supabase
+        .from("donorprofile")
+        .update({
+          name: data.name,
+          location: data.location,
+          is_active: data.is_active,
+        })
+        .eq("donor_id", data.donor_id);
+
+      if (error) throw error;
+      return result;
+    } catch (err) {
+      throw new Error(err.message);
+    }
   },
 
-  deleteDonor: (data, callBack) => {
-    pool.query(
-      `DELETE FROM DonorProfile WHERE user_id = ?`,
-      [data.user_id],
-      (err, results) => {
-        if (err) return callBack(err);
-        return callBack(null, results);
-      }
-    );
+  deleteDonor: async (data) => {
+    try {
+      const { error, data: result } = await supabase
+        .from("donorprofile")
+        .delete()
+        .eq("donor_id", data.donor_id);
+
+      if (error) throw error;
+      return result;
+    } catch (err) {
+      throw new Error(err.message);
+    }
   },
 };

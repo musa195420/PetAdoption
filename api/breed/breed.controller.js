@@ -1,51 +1,67 @@
-const { createBreed, getBreeds, getBreedById, updateBreed, deleteBreed, bulkInsertBreeds } = require("./breed.service");
-
-module.exports = {
-    addBreed: (req, res) => {
-        const body = req.body;
-        createBreed(body, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: err });
-            return res.status(200).json({success: 200, data: results });
-        });
+const {
+    createBreed,
+    getBreeds,
+    getBreedById,
+    updateBreed,
+    deleteBreed,
+    bulkInsertBreeds,
+  } = require("./breed.service");
+  
+  module.exports = {
+    addBreed: async (req, res) => {
+      try {
+        const result = await createBreed(req.body);
+        res.status(200).json({ success: 200, data: result });
+      } catch (err) {
+        res.status(500).json({ success: 400, message: err.message });
+      }
     },
-
-    getAllBreeds: (req, res) => {
-        getBreeds((err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: err });
-            return res.status(200).json({success: 200, data: results });
-        });
+  
+    getAllBreeds: async (req, res) => {
+      try {
+        const result = await getBreeds();
+        res.status(200).json({ success: 200, data: result });
+      } catch (err) {
+        res.status(500).json({ success: 400, message: err.message });
+      }
     },
-
-    getBreedById: (req, res) => {
-        const id = req.params.id;
-        getBreedById(id, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: err });
-            if (!results) return res.status(404).json({ success: 400, message: "Breed not found" });
-            return res.status(200).json({success: 200, data: results });
-        });
+  
+    getBreedById: async (req, res) => {
+      try {
+        const { breed_id } = req.body;
+        const result = await getBreedById(breed_id);
+        res.status(200).json({ success: 200, data: result });
+      } catch (err) {
+        res.status(500).json({ success: 400, message: err.message });
+      }
     },
-
-    updateBreed: (req, res) => {
-        const data = req.body;
-        updateBreed(data, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: err });
-            return res.status(200).json({success: 200, message: "Breed updated successfully" });
-        });
+  
+    updateBreed: async (req, res) => {
+      try {
+        const result = await updateBreed(req.body);
+        res.status(200).json({ success: 200, message: "Breed updated successfully", data: result });
+      } catch (err) {
+        res.status(500).json({ success: 400, message: err.message });
+      }
     },
-
-    deleteBreed: (req, res) => {
-        const id = req.params.id;
-        deleteBreed(id, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: err });
-            return res.status(200).json({success: 200, message: "Breed deleted successfully" });
-        });
+  
+    deleteBreed: async (req, res) => {
+      try {
+        const { breed_id } = req.body;
+        const result = await deleteBreed(breed_id);
+        res.status(200).json({ success: 200, message: "Breed deleted successfully", data: result });
+      } catch (err) {
+        res.status(500).json({ success: 400, message: err.message });
+      }
     },
-
-    bulkBreedInsert: (req, res) => {
-        const { breeds } = req.body; // [{name: "Labrador", animal_id: 1}, ...]
-        bulkInsertBreeds(breeds, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: err });
-            return res.status(200).json({success: 200, message: "Breeds inserted successfully", data: results });
-        });
+  
+    bulkBreedInsert: async (req, res) => {
+      try {
+        const result = await bulkInsertBreeds(req.body.breeds);
+        res.status(200).json({ success: 200, message: "Breeds inserted successfully", data: result });
+      } catch (err) {
+        res.status(500).json({ success: 400, message: err.message });
+      }
     },
-};
+  };
+  

@@ -7,42 +7,54 @@ const {
 } = require("./favourite.service");
 
 module.exports = {
-    addFavorite: (req, res) => {
-        addFavorite(req.body, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: "DB error", error: err });
-            return res.status(200).json({success: 200, data: results });
-        });
+    addFavorite: async (req, res) => {
+        try {
+            const result = await addFavorite(req.body);
+            res.status(200).json({ success: true, data: result });
+        } catch (err) {
+            res.status(500).json({ success: false, message: err.message });
+        }
     },
 
-    getFavorites: (req, res) => {
-        getFavorites((err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: "DB error", error: err });
-            return res.status(200).json({success: 200, data: results });
-        });
+    getFavorites: async (req, res) => {
+        try {
+            const result = await getFavorites();
+            res.status(200).json({ success: true, data: result });
+        } catch (err) {
+            res.status(500).json({ success: false, message: err.message });
+        }
     },
 
-    getFavoriteById: (req, res) => {
-        const id = req.params.fav_id;
-        getFavoriteById(id, (err, result) => {
-            if (err) return res.status(500).json({ success: 400, message: "DB error", error: err });
-            if (!result) return res.status(404).json({ success: 400, message: "Not found" });
-            return res.status(200).json({success: 200, data: result });
-        });
+    getFavoriteById: async (req, res) => {
+        try {
+            const { fav_id } = req.body;
+            const result = await getFavoriteById(fav_id);
+            if (!result) return res.status(404).json({ success: false, message: "Not found" });
+            res.status(200).json({ success: true, data: result });
+        } catch (err) {
+            res.status(500).json({ success: false, message: err.message });
+        }
     },
 
-    getFavoritesByUserId: (req, res) => {
-        const id = req.params.user_id;
-        getFavoritesByUserId(id, (err, result) => {
-            if (err) return res.status(500).json({ success: 400, message: "DB error", error: err });
-            return res.status(200).json({success: 200, data: result });
-        });
+    getFavoritesByUserId: async (req, res) => {
+        try {
+            const { user_id } = req.body;
+            const result = await getFavoritesByUserId(user_id);
+            res.status(200).json({ success: true, data: result });
+        } catch (err) {
+            res.status(500).json({ success: false, message: err.message });
+        }
     },
 
-    deleteFavorite: (req, res) => {
-        const id = req.params.fav_id;
-        deleteFavorite(id, (err, result) => {
-            if (err) return res.status(500).json({ success: 400, message: "DB error", error: err });
-            return res.status(200).json({success: 200, message: "Deleted successfully" });
-        });
+    deleteFavorite: async (req, res) => {
+        try {
+            const { fav_id } = req.body;
+            const result = await deleteFavorite(fav_id);
+            if (!result.length)
+                return res.status(404).json({ success: false, message: "Not found" });
+            res.status(200).json({ success: true, message: "Deleted successfully", data: result });
+        } catch (err) {
+            res.status(500).json({ success: false, message: err.message });
+        }
     }
 };

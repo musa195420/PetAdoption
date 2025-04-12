@@ -1,78 +1,61 @@
-const pool = require("../../config/database");
+const supabase = require("../../config/database");
 
 module.exports = {
-    createBreed: (data, callBack) => {
-        pool.query(
-            `INSERT INTO Breed (animal_id, name) VALUES (?, ?)`,
-            [data.animal_id, data.name],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
-    },
+  createBreed: async (data) => {
+    const { animal_id, name } = data;
+    const { data: result, error } = await supabase
+      .from("breed")
+      .insert([{animal_id:data.animal_id,name: data.name }]);
 
-    getBreeds: (callBack) => {
-        pool.query(`SELECT * FROM Breed`, [], (err, results) => {
-            if (err) return callBack(err);
-            return callBack(null, results);
-        });
-    },
+    if (error) throw error;
+    return result;
+  },
 
-    getBreedById: (id, callBack) => {
-        pool.query(`SELECT * FROM Breed WHERE breed_id = ?`, [id], (err, results) => {
-            if (err) return callBack(err);
-            return callBack(null, results[0]);
-        });
-    },
+  getBreeds: async () => {
+    const { data, error } = await supabase.from("breed").select("*");
+    if (error) throw error;
+    return data;
+  },
 
-    updateBreed: (data, callBack) => {
-        const fields = [];
-        const values = [];
-    
-        if (data.name !== undefined && data.name !== null) {
-            fields.push("name = ?");
-            values.push(data.name);
-        }
-    
-        if (data.animal_id !== undefined && data.animal_id !== null) {
-            fields.push("animal_id = ?");
-            values.push(data.animal_id);
-        }
-    
-        // If no updatable fields are provided
-        if (fields.length === 0) {
-            return callBack(null, { message: "No valid fields provided for update" });
-        }
-    
-        // Always include the WHERE clause
-        values.push(data.breed_id);
-    
-        const sql = `UPDATE Breed SET ${fields.join(", ")} WHERE breed_id = ?`;
-    
-        pool.query(sql, values, (err, results) => {
-            if (err) return callBack(err);
-            return callBack(null, results);
-        });
-    },
-    
+  getBreedById: async (breed_id) => {
+    const { data, error } = await supabase
+      .from("breed")
+      .select("*")
+      .eq("breed_id", breed_id)
+      .single();
 
-    deleteBreed: (id, callBack) => {
-        pool.query(`DELETE FROM Breed WHERE breed_id = ?`, [id], (err, results) => {
-            if (err) return callBack(err);
-            return callBack(null, results);
-        });
-    },
+    if (error) throw error;
+    return data;
+  },
 
-    bulkInsertBreeds: (breedList, callBack) => {
-        const values = breedList.map(b => [b.animal_id, b.name]);
-        pool.query(
-            `INSERT INTO Breed (animal_id, name) VALUES ?`,
-            [values],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
-    },
+  updateBreed: async (data) => {
+    const { breed_id, name, animal_id } = data;
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (animal_id) updateData.animal_id = animal_id;
+
+    const { data: result, error } = await supabase
+      .from("breed")
+      .update(updateData)
+      .eq("breed_id", breed_id);
+
+    if (error) throw error;
+    return result;
+  },
+
+  deleteBreed: async (breed_id) => {
+    const { data, error } = await supabase
+      .from("breed")
+      .delete()
+      .eq("breed_id", breed_id);
+
+    if (error) throw error;
+    return data;
+  },
+
+  bulkInsertBreeds: async (breedList) => {
+    const { data, error } = await supabase.from("breed").insert(breedList);
+    if (error) throw error;
+    return data;
+  }
 };

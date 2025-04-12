@@ -5,7 +5,7 @@ let refreshTokens = []; // In-memory store (use DB or Redis in production)
 
 module.exports = {
     generateAccessToken: (user) => {
-        return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
+        return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "3h" });
     },
 
     generateRefreshToken: (user) => {
@@ -29,7 +29,7 @@ module.exports = {
             const payload = { id: user.id, email: user.email };
     
             // Generate new tokens
-            const newAccessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
+            const newAccessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "2h" });
             const newRefreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET);
     
             refreshTokens.push(newRefreshToken); // Store the new one

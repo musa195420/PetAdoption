@@ -1,92 +1,86 @@
-const pool = require("../../config/database");
+const supabase = require("../../config/database");
 
 module.exports = {
-    createVaccination: (data, callBack) => {
-        pool.query(
-            `INSERT INTO Vaccination (animal_id, name, description) VALUES (?, ?, ?)`,
-            [data.animal_id, data.name, data.description],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
+    createVaccination: async (data) => {
+        const { animal_id, name, description } = data;
+        try {
+            const { data: results, error } = await supabase
+                .from('vaccination')
+                .insert([{ animal_id, name, description }]);
+
+            if (error) throw new Error(error.message);
+            return results;
+        } catch (err) {
+            throw err;
+        }
     },
 
-    getVaccinations: callBack => {
-        pool.query(
-            `SELECT * FROM Vaccination`,
-            [],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
+    getVaccinations: async () => {
+        try {
+            const { data, error } = await supabase.from('vaccination').select('*');
+            if (error) throw new Error(error.message);
+            return data;
+        } catch (err) {
+            throw err;
+        }
     },
 
-    getVaccinationById: (id, callBack) => {
-        pool.query(
-            `SELECT * FROM Vaccination WHERE vaccine_id = ?`,
-            [id],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results[0]);
-            }
-        );
+    getVaccinationById: async (vaccine_id) => {
+        try {
+            const { data, error } = await supabase
+                .from('vaccination')
+                .select('*')
+                .eq('vaccine_id', vaccine_id)
+                .single(); // Fetch a single record
+
+            if (error) throw new Error(error.message);
+            return data;
+        } catch (err) {
+            throw err;
+        }
     },
 
-    updateVaccination: (data, callBack) => {
-        let fields = [];
-        let values = [];
+    updateVaccination: async (data) => {
+        const { vaccine_id, animal_id, name, description } = data;
+        try {
+            const { error } = await supabase
+                .from('vaccination')
+                .update({ animal_id, name, description })
+                .eq('vaccine_id', vaccine_id);
 
-        if (data.name) {
-            fields.push("name = ?");
-            values.push(data.name);
+            if (error) throw new Error(error.message);
+        } catch (err) {
+            throw err;
         }
-        if (data.description) {
-            fields.push("description = ?");
-            values.push(data.description);
-        }
-        if (data.animal_id) {
-            fields.push("animal_id = ?");
-            values.push(data.animal_id);
-        }
-
-        if (!data.vaccine_id) {
-            return callBack(new Error("vaccine_id is required"));
-        }
-
-        values.push(data.vaccine_id);
-
-        const sql = `UPDATE Vaccination SET ${fields.join(", ")} WHERE vaccine_id = ?`;
-        pool.query(sql, values, (err, results) => {
-            if (err) return callBack(err);
-            return callBack(null, results);
-        });
     },
 
-    deleteVaccination: (id, callBack) => {
-        pool.query(
-            `DELETE FROM Vaccination WHERE vaccine_id = ?`,
-            [id],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
-    },
-    bulkInsertVaccinations: (vaccines, callBack) => {
-        if (!Array.isArray(vaccines) || vaccines.length === 0) {
-            return callBack(new Error("No data provided"));
-        }
+    deleteVaccination: async (vaccine_id) => {
+        try {
+            const { error } = await supabase
+                .from('vaccination')
+                .delete()
+                .eq('vaccine_id', vaccine_id);
 
-        const values = vaccines.map(v => [v.animal_id, v.name, v.description]);
-        pool.query(
-            `INSERT INTO Vaccination (animal_id, name, description) VALUES ?`,
-            [values],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
+            if (error) throw new Error(error.message);
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    bulkInsertVaccinations: async (vaccines) => {
+        try {
+            if (!Array.isArray(vaccines) || vaccines.length === 0) {
+                throw new Error("No data provided");
             }
-        );
+
+            const { data, error } = await supabase
+                .from('vaccination')
+                .insert(vaccines);
+
+            if (error) throw new Error(error.message);
+            return data;
+        } catch (err) {
+            throw err;
+        }
     },
 };

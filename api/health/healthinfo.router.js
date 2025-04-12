@@ -1,10 +1,19 @@
 const router = require("express").Router();
-const {createHealthInfo,getHealthInfoByPetId,getHealthInfoById,getAllHealthInfo,updateHealthInfo,deleteHealthInfo} = require("./healthinfo.controller");
+const {
+    createHealthInfo,
+    getAllHealthInfo,
+    getHealthInfoById,
+    updateHealthInfo,
+    deleteHealthInfo,
+    getHealthInfoByPetId
+} = require("./healthinfo.controller");
 
+// Routes
 router.post("/", createHealthInfo);
 router.get("/", getAllHealthInfo);
-router.get("/:id", getHealthInfoById);
-router.patch("/", updateHealthInfo);
-router.delete("/:id", deleteHealthInfo);
-router.get("/pet/:pet_id",getHealthInfoByPetId);
+router.post("/get", getHealthInfoById);         // { health_id }
+router.patch("/", updateHealthInfo);            // { health_id, fields... }
+router.delete("/", deleteHealthInfo);           // { health_id }
+router.get("/pet", getHealthInfoByPetId);      // { pet_id }
+
 module.exports = router;

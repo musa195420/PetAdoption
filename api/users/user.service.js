@@ -1,99 +1,81 @@
-const pool = require("../../config/database");
+const supabase = require("../../config/database");
 
 module.exports = {
-  createUser: (data, callBack) => {
-    pool.query(
-      `INSERT INTO Users (email, phone_number, password, role, device_id)
-       VALUES (?, ?, ?, ?, ?)`,
-      [data.email, data.phone_number, data.password, data.role, data.device_id],
-      (error, results) => {
-        if (error) return callBack(error);
-        return callBack(null, results);
-      }
-    );
+  createUser: async (data) => {
+    const { email, phone_number, password, role, device_id } = data;
+    const { data: result, error } = await supabase
+      .from('users')
+      .insert([{ email, phone_number, password, role, device_id }])
+      .select();
+
+    if (error) throw new Error(error.message);
+    return result;
   },
 
-  getUserById: (id, callBack) => {
-    pool.query(
-      `SELECT user_id, email, phone_number, role, device_id, created_at FROM Users WHERE user_id = ?`,
-      [id],
-      (error, results) => {
-        if (error) return callBack(error);
-        return callBack(null, results[0]);
-      }
-    );
+  getUserById: async (id) => {
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('user_id, email, phone_number, role, device_id, created_at')
+      .eq('user_id', id)
+      .single();
+
+    if (error) throw new Error(error.message);
+    return user;
   },
 
-  getUsers: (callBack) => {
-    pool.query(
-      `SELECT user_id, email, phone_number, role, created_at FROM Users`,
-      [],
-      (error, results) => {
-        if (error) return callBack(error);
-        return callBack(null, results);
-      }
-    );
+  getUsers: async () => {
+    const { data: users, error } = await supabase
+      .from('users')
+      .select('user_id, email, phone_number, role, created_at');
+
+    if (error) throw new Error(error.message);
+    return users;
   },
 
-  updateUser: (data, callBack) => {
+  updateUser: async (data) => {
     const { user_id, email, phone_number, role, device_id } = data;
-  
-    // Build fields and values dynamically
-    const fields = [];
-    const values = [];
-  
-    if (email !== null && email !== undefined) {
-      fields.push('email = ?');
-      values.push(email);
-      console.log(`email ${email}`);
-    }
-    if (phone_number !== null && phone_number !== undefined) {
-      fields.push('phone_number = ?');
-      values.push(phone_number);
-    }
-    if (role !== null && role !== undefined) {
-      fields.push('role = ?');
-      values.push(role);
-    }
-    if (device_id !== null && device_id !== undefined) {
-      fields.push('device_id = ?');
-      values.push(device_id);
-    }
-  
-    if (fields.length === 0) {
-      return callBack(new Error('No valid fields to update.'));
-    }
-  
-    values.push(user_id); // Add user_id for WHERE clause
-  
-    const sql = `UPDATE Users SET ${fields.join(', ')} WHERE user_id = ?`;
-  
-    pool.query(sql, values, (error, results) => {
-      if (error) return callBack(error);
-      return callBack(null, results);
-    });
-  },
-  
 
-  deleteUser: (data, callBack) => {
-    pool.query(
-      `DELETE FROM Users WHERE user_id = ?`,
-      [data.user_id],
-      (error, results) => {
-        if (error) return callBack(error);
-        return callBack(null, results);
-      }
-    );
+    const fieldsToUpdate = {};
+    if (email !== undefined) fieldsToUpdate.email = email;
+    if (phone_number !== undefined) fieldsToUpdate.phone_number = phone_number;
+    if (role !== undefined) fieldsToUpdate.role = role;
+    if (device_id !== undefined) fieldsToUpdate.device_id = device_id;
+
+    if (Object.keys(fieldsToUpdate).length === 0) {
+      throw new Error('No valid fields to update.');
+    }
+
+    const { data: updatedUser, error } = await supabase
+      .from('users')
+      .update(fieldsToUpdate)
+      .eq('user_id', user_id)
+      .select();
+
+    if (error) throw new Error(error.message);
+    return updatedUser;
   },
 
-  getUserByEmail: (email, callBack) => {
-    pool.query(
-      `SELECT * FROM Users WHERE email = ?`,
-      [email],
-      (error, results) => {
-        if (error) return callBack(error);
-        return callBack(null, results[0]);
-      }
-    );
+  deleteUser: async (data) => {
+    const { user_id } = data;
+    const { data: deletedUser, error } = await supabase
+      .from('users')
+      .delete()
+      .eq('user_id', user_id)
+      .select();
+
+    if (error) throw new Error(error.message);
+    return deletedUser;
+  },
+
+  getUserByEmail: async (email) => {
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .single();
+  
+   
+    if (error) throw new Error(error.message);
+    return user;
   },
 };

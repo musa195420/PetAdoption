@@ -6,7 +6,7 @@ const {checkToken} =require("../auth/token_validation");
 
 router.post("/", addUserValdation, registerUser);
 router.get("/",checkToken,getAllUsers);
-router.get("/:id",checkToken,getUserById);
+router.get("/id/",checkToken,getUserById);
 router.patch("/",checkToken,updateUser);
 router.delete("/",checkToken,deleteUser);
 router.post("/login",login);

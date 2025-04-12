@@ -13,7 +13,7 @@ const { checkToken } = require("../auth/token_validation");
 
 router.post("/", checkToken,addDonorValdation ,createDonor);
 router.get("/", checkToken, getAllDonors);
-router.get("/:id", checkToken, getDonorById);
+router.get("/id/", checkToken, getDonorById);
 router.patch("/", checkToken, updateDonor);
 router.delete("/", checkToken, deleteDonor);
 

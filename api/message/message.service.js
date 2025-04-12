@@ -1,80 +1,70 @@
-const pool = require("../../config/database");
+const supabase = require("../../config/database");
 
 module.exports = {
-    createMessage: (data, callBack) => {
-        pool.query(
-            `INSERT INTO Message (sender_id, receiver_id, content, timestamp) VALUES (?, ?, ?, ?)`,
-            [data.sender_id, data.receiver_id, data.content, data.timestamp],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
+    createMessage: async (data) => {
+        const { sender_id, receiver_id, content, timestamp } = data;
+        const { data: result, error } = await supabase
+            .from("message")
+            .insert([{ sender_id, receiver_id, content, timestamp }])
+            .select();
+
+        if (error) throw new Error(error.message);
+        return result;
     },
 
-    getAllMessages: callBack => {
-        pool.query(`SELECT * FROM Message`, [], (err, results) => {
-            if (err) return callBack(err);
-            return callBack(null, results);
-        });
+    getAllMessages: async () => {
+        const { data: result, error } = await supabase
+            .from("message")
+            .select("*");
+
+        if (error) throw new Error(error.message);
+        return result;
     },
 
-    getMessagesByUserId: (user_id, callBack) => {
-        pool.query(
-            `SELECT * FROM Message WHERE sender_id = ? OR receiver_id = ? ORDER BY timestamp ASC`,
-            [user_id, user_id],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
+    getMessagesByUserId: async (user_id) => {
+        const { data: result, error } = await supabase
+            .from("message")
+            .select("*")
+            .or(`sender_id.eq.${user_id},receiver_id.eq.${user_id}`)
+            .order("timestamp", { ascending: true });
+
+        if (error) throw new Error(error.message);
+        return result;
     },
 
-    getMessagesBetweenUsers: (sender_id, receiver_id, callBack) => {
-        pool.query(
-            `SELECT * FROM Message 
-             WHERE (sender_id = ? AND receiver_id = ?) 
-                OR (sender_id = ? AND receiver_id = ?) 
-             ORDER BY timestamp ASC`,
-            [sender_id, receiver_id, receiver_id, sender_id],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
+    getMessagesBetweenUsers: async (sender_id, receiver_id) => {
+        const { data: result, error } = await supabase
+            .from("message")
+            .select("*")
+            .or(
+                `and(sender_id.eq.${sender_id},receiver_id.eq.${receiver_id}),and(sender_id.eq.${receiver_id},receiver_id.eq.${sender_id})`
+            )
+            .order("timestamp", { ascending: true });
+    
+        if (error) throw new Error(error.message);
+        return result;
     },
-    deleteMessage: (message_id, callBack) => {
-        pool.query(
-            `DELETE FROM Message WHERE message_id = ?`,
-            [message_id],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
+
+    deleteMessage: async (message_id) => {
+        const { data: result, error } = await supabase
+            .from("message")
+            .delete()
+            .eq("message_id", message_id);
+
+        if (error) throw new Error(error.message);
+        return result;
     },
-    
-    // Update message content
-    updateMessage: (data, callBack) => {
-        const fields = [];
-        const values = [];
-    
-        if (data.content != null) {
-            fields.push("content = ?");
-            values.push(data.content);
-        }
-    
-        if (fields.length === 0) {
-            return callBack(new Error("No fields provided for update."));
-        }
-    
-        values.push(data.message_id);
-    
-        const query = `UPDATE Message SET ${fields.join(", ")} WHERE message_id = ?`;
-    
-        pool.query(query, values, (err, results) => {
-            if (err) return callBack(err);
-            return callBack(null, results);
-        });
-    }
+
+    updateMessage: async (data) => {
+        const { message_id, content } = data;
+
+        const { data: result, error } = await supabase
+            .from("message")
+            .update({ content })
+            .eq("message_id", message_id)
+            .select();
+
+        if (error) throw new Error(error.message);
+        return result;
+    },
 };

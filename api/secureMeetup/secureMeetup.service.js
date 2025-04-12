@@ -1,78 +1,79 @@
-const pool = require("../../config/database");
+const supabase = require("../../config/database");
 
 module.exports = {
-    createSecureMeetup: (data, callBack) => {
-        pool.query(
-            `INSERT INTO SecureMeetup (meetup_id, proof_pic_url, adopter_id_front_url, adopter_id_back_url, phone_number, current_address, time, submitted_by)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            [
-                data.meetup_id,
-                data.proof_pic_url,
-                data.adopter_id_front_url,
-                data.adopter_id_back_url,
-                data.phone_number,
-                data.current_address,
-                data.time,
-                data.submitted_by
-            ],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
-    },
-
-    getAllSecureMeetups: callBack => {
-        pool.query(
-            `SELECT * FROM SecureMeetup`,
-            [],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
-    },
-
-    getSecureMeetupById: (secure_meetup_id, callBack) => {
-        pool.query(
-            `SELECT * FROM SecureMeetup WHERE secure_meetup_id = ?`,
-            [secure_meetup_id],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results[0]);
-            }
-        );
-    },
-
-    updateSecureMeetup: (data, callBack) => {
-        let fields = [];
-        let values = [];
-
-        for (let key in data) {
-            if (key !== "secure_meetup_id" && data[key] !== null && data[key] !== undefined) {
-                fields.push(`${key} = ?`);
-                values.push(data[key]);
-            }
+    createSecureMeetup: async (data) => {
+        try {
+            const { data: result, error } = await supabase
+                .from("securemeetup")
+                .insert([
+                    {
+                        meetup_id: data.meetup_id,
+                        proof_pic_url: data.proof_pic_url,
+                        adopter_id_front_url: data.adopter_id_front_url,
+                        adopter_id_back_url: data.adopter_id_back_url,
+                        phone_number: data.phone_number,
+                        current_address: data.current_address,
+                        time: data.time,
+                        submitted_by: data.submitted_by
+                    }
+                ]);
+            if (error) throw error;
+            return result;
+        } catch (err) {
+            throw new Error(err.message);
         }
-
-        values.push(data.secure_meetup_id);
-
-        const query = `UPDATE SecureMeetup SET ${fields.join(", ")} WHERE secure_meetup_id = ?`;
-
-        pool.query(query, values, (err, results) => {
-            if (err) return callBack(err);
-            return callBack(null, results);
-        });
     },
 
-    deleteSecureMeetup: (secure_meetup_id, callBack) => {
-        pool.query(
-            `DELETE FROM SecureMeetup WHERE secure_meetup_id = ?`,
-            [secure_meetup_id],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
+    getAllSecureMeetups: async () => {
+        try {
+            const { data: result, error } = await supabase
+                .from("securemeetup")
+                .select("*");
+            if (error) throw error;
+            return result;
+        } catch (err) {
+            throw new Error(err.message);
+        }
+    },
+
+    getSecureMeetupById: async (secure_meetup_id) => {
+        try {
+            const { data: result, error } = await supabase
+                .from("securemeetup")
+                .select("*")
+                .eq("secure_meetup_id", secure_meetup_id)
+                .single(); // To fetch a single row
+            if (error) throw error;
+            return result;
+        } catch (err) {
+            throw new Error(err.message);
+        }
+    },
+
+    updateSecureMeetup: async (data) => {
+        try {
+            const { secure_meetup_id, ...updateData } = data;
+            const { data: result, error } = await supabase
+                .from("securemeetup")
+                .update(updateData)
+                .eq("secure_meetup_id", secure_meetup_id);
+            if (error) throw error;
+            return result;
+        } catch (err) {
+            throw new Error(err.message);
+        }
+    },
+
+    deleteSecureMeetup: async (secure_meetup_id) => {
+        try {
+            const { data: result, error } = await supabase
+                .from("securemeetup")
+                .delete()
+                .eq("secure_meetup_id", secure_meetup_id);
+            if (error) throw error;
+            return result;
+        } catch (err) {
+            throw new Error(err.message);
+        }
     }
 };

@@ -1,97 +1,76 @@
-const pool = require("../../config/database");
+const supabase = require("../../config/database");
 
 module.exports = {
-    createDisability: (data, callBack) => {
-        pool.query(
-            `INSERT INTO Disability (animal_id, name, description) VALUES (?, ?, ?)`,
-            [data.animal_id, data.name, data.description],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
+    createDisability: async (data) => {
+        const { animal_id, name, description } = data;
+        const { data: disability, error } = await supabase
+            .from('disability')
+            .insert([
+                { animal_id, name, description }
+            ])
+            .single();
+
+        if (error) throw new Error(error.message);
+        return disability;
     },
 
-    getAllDisabilities: (callBack) => {
-        pool.query(`SELECT * FROM Disability`, [], (err, results) => {
-            if (err) return callBack(err);
-            return callBack(null, results);
-        });
+    getAllDisabilities: async () => {
+        const { data, error } = await supabase
+            .from('disability')
+            .select('*');
+
+        if (error) throw new Error(error.message);
+        return data;
     },
 
-    getDisabilityById: (id, callBack) => {
-        pool.query(
-            `SELECT * FROM Disability WHERE disability_id = ?`,
-            [id],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results[0]);
-            }
-        );
+    getDisabilityById: async (disability_id) => {
+        const { data, error } = await supabase
+            .from('disability')
+            .select('*')
+            .eq('disability_id', disability_id)
+            .single();
+
+        if (error) throw new Error(error.message);
+        return data;
     },
 
-    updateDisability: (data, callBack) => {
-        let fields = [];
-        let values = [];
+    updateDisability: async (data) => {
+        const { disability_id, animal_id, name, description } = data;
+        const { error } = await supabase
+            .from('disability')
+            .update({ animal_id, name, description })
+            .eq('disability_id', disability_id);
 
-        if (data.animal_id) {
-            fields.push("animal_id = ?");
-            values.push(data.animal_id);
-        }
-        if (data.name) {
-            fields.push("name = ?");
-            values.push(data.name);
-        }
-        if (data.description) {
-            fields.push("description = ?");
-            values.push(data.description);
-        }
-
-        if (!data.disability_id) return callBack(new Error("Disability ID is required"));
-
-        values.push(data.disability_id);
-
-        const sql = `UPDATE Disability SET ${fields.join(", ")} WHERE disability_id = ?`;
-
-        pool.query(sql, values, (err, results) => {
-            if (err) return callBack(err);
-            return callBack(null, results);
-        });
+        if (error) throw new Error(error.message);
+        return { message: 'Updated successfully' };
     },
 
-    deleteDisability: (id, callBack) => {
-        pool.query(
-            `DELETE FROM Disability WHERE disability_id = ?`,
-            [id],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
+    deleteDisability: async (disability_id) => {
+        const { error } = await supabase
+            .from('disability')
+            .delete()
+            .eq('disability_id', disability_id);
+
+        if (error) throw new Error(error.message);
+        return { message: 'Deleted successfully' };
     },
 
-    getDisabilitiesByAnimalId: (animal_id, callBack) => {
-        pool.query(
-            `SELECT * FROM Disability WHERE animal_id = ?`,
-            [animal_id],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
+    getDisabilitiesByAnimalId: async (animal_id) => {
+        const { data, error } = await supabase
+            .from('disability')
+            .select('*')
+            .eq('animal_id', animal_id);
+
+        if (error) throw new Error(error.message);
+        return data;
     },
-    bulkInsertDisabilities: (data, callBack) => {
-        if (!data || data.length === 0) return callBack(new Error("No disability data provided"));
 
-        const values = data.map(item => [item.animal_id, item.name, item.description]);
+    bulkInsertDisabilities: async (data) => {
+        const { error } = await supabase
+            .from('disability')
+            .upsert(data, { onConflict: ['disability_id'] });
 
-        pool.query(
-            `INSERT INTO Disability (animal_id, name, description) VALUES ?`,
-            [values],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
+        if (error) throw new Error(error.message);
+        return { message: 'Bulk insert successful' };
     },
 };

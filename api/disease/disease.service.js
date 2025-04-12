@@ -1,103 +1,102 @@
-const pool = require("../../config/database");
+const supabase = require("../../config/database");
 
 module.exports = {
-    createDisease: (data, callBack) => {
-        pool.query(
-            `INSERT INTO Disease (animal_id, name, description) VALUES (?, ?, ?)`,
-            [data.animal_id, data.name, data.description],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
-    },
-
-    getDiseases: callBack => {
-        pool.query(
-            `SELECT * FROM Disease`,
-            [],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
-    },
-
-    getDiseaseById: (id, callBack) => {
-        pool.query(
-            `SELECT * FROM Disease WHERE disease_id = ?`,
-            [id],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results[0]);
-            }
-        );
-    },
-
-    updateDisease: (data, callBack) => {
-        let fields = [];
-        let values = [];
-
-        if (data.animal_id) {
-            fields.push("animal_id = ?");
-            values.push(data.animal_id);
+    createDisease: async (data) => {
+        const { animal_id, name, description } = data;
+        try {
+            const { data: results, error } = await supabase
+                .from('disease')
+                .insert([{ animal_id, name, description }]);
+            
+            if (error) throw new Error(error.message);
+            return results;
+        } catch (err) {
+            throw err;
         }
-        if (data.name) {
-            fields.push("name = ?");
-            values.push(data.name);
-        }
-        if (data.description) {
-            fields.push("description = ?");
-            values.push(data.description);
-        }
-
-        if (!data.disease_id) {
-            return callBack(new Error("Disease ID is required"));
-        }
-
-        values.push(data.disease_id);
-        const sql = `UPDATE Disease SET ${fields.join(", ")} WHERE disease_id = ?`;
-
-        pool.query(sql, values, (err, results) => {
-            if (err) return callBack(err);
-            return callBack(null, results);
-        });
     },
 
-    deleteDisease: (id, callBack) => {
-        pool.query(
-            `DELETE FROM Disease WHERE disease_id = ?`,
-            [id],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
-    },
-
-    bulkInsertDiseases: (diseases, callBack) => {
-        if (!Array.isArray(diseases) || diseases.length === 0) {
-            return callBack(new Error("No data provided"));
+    getDiseases: async () => {
+        try {
+            const { data, error } = await supabase
+                .from('disease')
+                .select('*');
+            
+            if (error) throw new Error(error.message);
+            return data;
+        } catch (err) {
+            throw err;
         }
-
-        const values = diseases.map(d => [d.animal_id, d.name, d.description]);
-        pool.query(
-            `INSERT INTO Disease (animal_id, name, description) VALUES ?`,
-            [values],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
     },
-    getDiseasesByAnimalId: (animal_id, callBack) => {
-        pool.query(
-            `SELECT * FROM Disease WHERE animal_id = ?`,
-            [animal_id],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
+
+    getDiseaseById: async (disease_id) => {
+        try {
+            const { data, error } = await supabase
+                .from('disease')
+                .select('*')
+                .eq('disease_id', disease_id)
+                .single(); // Fetch a single record
+            
+            if (error) throw new Error(error.message);
+            return data;
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    updateDisease: async (data) => {
+        const { disease_id, animal_id, name, description } = data;
+        try {
+            const { error } = await supabase
+                .from('disease')
+                .update({ animal_id, name, description })
+                .eq('disease_id', disease_id);
+            
+            if (error) throw new Error(error.message);
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    deleteDisease: async (disease_id) => {
+        try {
+            const { error } = await supabase
+                .from('disease')
+                .delete()
+                .eq('disease_id', disease_id);
+            
+            if (error) throw new Error(error.message);
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    bulkInsertDiseases: async (diseases) => {
+        try {
+            if (!Array.isArray(diseases) || diseases.length === 0) {
+                throw new Error("No data provided");
             }
-        );
-    }
+            const { data, error } = await supabase
+                .from('disease')
+                .insert(diseases);
+            
+            if (error) throw new Error(error.message);
+            return data;
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    getDiseasesByAnimalId: async (animal_id) => {
+        try {
+            const { data, error } = await supabase
+                .from('disease')
+                .select('*')
+                .eq('animal_id', animal_id);
+            
+            if (error) throw new Error(error.message);
+            return data;
+        } catch (err) {
+            throw err;
+        }
+    },
 };

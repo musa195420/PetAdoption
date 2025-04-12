@@ -5,50 +5,92 @@ const {
     updateMeetup,
     deleteMeetup,
     getMeetupsByUser,
-    getMeetupsByPet
+    getMeetupsByPet,
 } = require("./meetup.service");
 
 module.exports = {
-    create: (req, res) => {
-        createMeetup(req.body, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: "DB error", error: err });
-            return res.status(200).json({success: 200, data: results });
-        });
+    create: async (req, res) => {
+        try {
+            const result = await createMeetup(req.body);
+            res.status(201).json({ success: true, data: result });
+        } catch (err) {
+            res.status(500).json({ status: 500, success: false, message: err.message });
+        }
     },
-    getAll: (req, res) => {
-        getMeetups((err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: "DB error", error: err });
-            return res.status(200).json({success: 200, data: results });
-        });
+
+    getAll: async (req, res) => {
+        try {
+            const result = await getMeetups();
+            if (!result || result.length === 0) {
+                return res.status(404).json({ status: 404, success: false, message: "No meetups found." });
+            }
+            res.status(200).json({ success: true, data: result });
+        } catch (err) {
+            res.status(500).json({ status: 500, success: false, message: err.message });
+        }
     },
-    getById: (req, res) => {
-        getMeetupById(req.params.meetup_id, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, error: err });
-            return res.status(200).json({success: 200, data: results });
-        });
+
+    getById: async (req, res) => {
+        try {
+            const { meetup_id } = req.body;
+            const result = await getMeetupById(meetup_id);
+            if (!result) {
+                return res.status(404).json({ status: 404, success: false, message: "Meetup not found." });
+            }
+            res.status(200).json({ success: true, data: result });
+        } catch (err) {
+            res.status(500).json({ status: 500, success: false, message: err.message });
+        }
     },
-    update: (req, res) => {
-        updateMeetup(req.body, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, error: err });
-            return res.status(200).json({success: 200, data: results });
-        });
+
+    update: async (req, res) => {
+        try {
+            const result = await updateMeetup(req.body);
+            if (!result || result.length === 0) {
+                return res.status(404).json({ status: 404, success: false, message: "Meetup not found or update failed." });
+            }
+            res.status(200).json({ success: true, data: result });
+        } catch (err) {
+            res.status(500).json({ status: 500, success: false, message: err.message });
+        }
     },
-    remove: (req, res) => {
-        deleteMeetup(req.params.meetup_id, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, error: err });
-            return res.status(200).json({success: 200, message: "Deleted successfully" });
-        });
+
+    remove: async (req, res) => {
+        try {
+            const { meetup_id } = req.body;
+            const result = await deleteMeetup(meetup_id);
+            if (!result || result.length === 0) {
+                return res.status(404).json({ status: 404, success: false, message: "Meetup not found or delete failed." });
+            }
+            res.status(200).json({ success: true, message: "Deleted", data: result });
+        } catch (err) {
+            res.status(500).json({ status: 500, success: false, message: err.message });
+        }
     },
-    getByUser: (req, res) => {
-        getMeetupsByUser(req.params.user_id, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, error: err });
-            return res.status(200).json({success: 200, data: results });
-        });
+
+    getByUser: async (req, res) => {
+        try {
+            const { user_id } = req.body;
+            const result = await getMeetupsByUser(user_id);
+            if (!result || result.length === 0) {
+                return res.status(404).json({ status: 404, success: false, message: "No meetups found for this user." });
+            }
+            res.status(200).json({ success: true, data: result });
+        } catch (err) {
+            res.status(500).json({ status: 500, success: false, message: err.message });
+        }
     },
-    getByPet: (req, res) => {
-        getMeetupsByPet(req.params.pet_id, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, error: err });
-            return res.status(200).json({success: 200, data: results });
-        });
+
+    getByPet: async (req, res) => {
+        try {
+            const { pet_id } = req.body;
+            const result = await getMeetupsByPet(pet_id);
+            if (!result || result.length === 0) {
+                return res.status(404).json({ status: 404, success: false, message: "No meetups found for this pet." });
+            }
+            res.status(200).json({ success: true, data: result });
+        } catch (err) {
+            res.status(500).json({ status: 500, success: false, message: err.message });
+        }
     },
 };

@@ -2,10 +2,10 @@ const Joi = require("@hapi/joi");
 
 const petSchema = {
     pet:Joi.object({
-    donor_id: Joi.number().integer().required(),
+    donor_id: Joi.string().required(),
     name: Joi.string().max(255).required(),
-    animal_type: Joi.number().integer().required(),
-    breed_id: Joi.number().integer().required(),
+    animal_type: Joi.string().required(),
+    breed_id: Joi.string().required(),
     age: Joi.number().integer().min(0).required(),
     gender: Joi.string().valid("Male", "Female").required(),
     description: Joi.string().allow("").max(1000),

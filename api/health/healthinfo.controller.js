@@ -8,51 +8,60 @@ const {
 } = require("./healthinfo.service");
 
 module.exports = {
-    createHealthInfo: (req, res) => {
-        const body = req.body;
-        create(body, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: err.message });
-            return res.status(200).json({success: 200, message: "Health record created", data: results });
-        });
+    createHealthInfo: async (req, res) => {
+        try {
+            const result = await create(req.body);
+            res.status(200).json({ success: true, message: "Health record created", data: result, status: 200 });
+        } catch (err) {
+            res.status(500).json({ success: false, message: err.message, status: 500 });
+        }
     },
 
-    getAllHealthInfo: (req, res) => {
-        getAll((err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: err.message });
-            return res.status(200).json({success: 200, data: results });
-        });
+    getAllHealthInfo: async (req, res) => {
+        try {
+            const result = await getAll();
+            res.status(200).json({ success: true, data: result, status: 200 });
+        } catch (err) {
+            res.status(500).json({ success: false, message: err.message, status: 500 });
+        }
     },
 
-    getHealthInfoById: (req, res) => {
-        const id = req.params.id;
-        getById(id, (err, result) => {
-            if (err) return res.status(500).json({ success: 400, message: err.message });
-            if (!result) return res.status(404).json({ success: 400, message: "Health record not found" });
-            return res.status(200).json({success: 200, data: result });
-        });
+    getHealthInfoById: async (req, res) => {
+        try {
+            const { health_id } = req.body;
+            const result = await getById(health_id);
+            res.status(200).json({ success: true, data: result, status: 200 });
+        } catch (err) {
+            res.status(500).json({ success: false, message: err.message, status: 500 });
+        }
     },
 
-    updateHealthInfo: (req, res) => {
-        const body = req.body;
-        update(body, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: err.message });
-            return res.status(200).json({success: 200, message: "Health record updated", data: results });
-        });
+    updateHealthInfo: async (req, res) => {
+        try {
+            const result = await update(req.body);
+            res.status(200).json({ success: true, message: "Health record updated", data: result, status: 200 });
+        } catch (err) {
+            res.status(500).json({ success: false, message: err.message, status: 500 });
+        }
     },
 
-    deleteHealthInfo: (req, res) => {
-        const id = req.params.id;
-        deleteHealthInfo(id, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: err.message });
-            return res.status(200).json({success: 200, message: "Health record deleted", data: results });
-        });
+    deleteHealthInfo: async (req, res) => {
+        try {
+            const { health_id } = req.body;
+            const result = await deleteHealthInfo(health_id);
+            res.status(200).json({ success: true, message: "Health record deleted", data: result, status: 200 });
+        } catch (err) {
+            res.status(500).json({ success: false, message: err.message, status: 500 });
+        }
     },
-    getHealthInfoByPetId: (req, res) => {
-        const pet_id = req.params.pet_id;
-        getByPetId(pet_id, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: err.message });
-            return res.status(200).json({success: 200, data: results });
-        });
+
+    getHealthInfoByPetId: async (req, res) => {
+        try {
+            const { pet_id } = req.body;
+            const result = await getByPetId(pet_id);
+            res.status(200).json({ success: true, data: result, status: 200 });
+        } catch (err) {
+            res.status(500).json({ success: false, message: err.message, status: 500 });
+        }
     },
-    
 };

@@ -9,62 +9,78 @@ const {
 } = require("./disability.service");
 
 module.exports = {
-    create: (req, res) => {
-        const body = req.body;
-        createDisability(body, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: err.message });
-            return res.status(200).json({success: 200, data: results });
-        });
-    },
-
-    getAll: (req, res) => {
-        getAllDisabilities((err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: err.message });
-            return res.status(200).json({success: 200, data: results });
-        });
-    },
-
-    getById: (req, res) => {
-        const id = req.params.id;
-        getDisabilityById(id, (err, result) => {
-            if (err) return res.status(500).json({ success: 400, message: err.message });
-            if (!result) return res.status(404).json({ success: 400, message: "Disability not found" });
-            return res.status(200).json({success: 200, data: result });
-        });
-    },
-
-    update: (req, res) => {
-        const data = req.body;
-        updateDisability(data, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: err.message });
-            return res.status(200).json({success: 200, message: "Updated successfully" });
-        });
-    },
-
-    remove: (req, res) => {
-        const id = req.body.disability_id;
-        deleteDisability(id, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: err.message });
-            return res.status(200).json({success: 200, message: "Deleted successfully" });
-        });
-    },
-
-    getByAnimalId: (req, res) => {
-        const animal_id = req.params.animal_id;
-        getDisabilitiesByAnimalId(animal_id, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: err.message });
-            return res.status(200).json({success: 200, data: results });
-        });
-    },
-    bulkInsert: (req, res) => {
-        const body = req.body.disabilities;
-        if (!Array.isArray(body)) {
-            return res.status(400).json({ success: 400, message: "Disabilities must be an array" });
+    create: async (req, res) => {
+        try {
+            const body = req.body;
+            const results = await createDisability(body);
+            return res.status(200).json({ success: 200, data: results });
+        } catch (err) {
+            return res.status(500).json({ success: 400, message: err.message });
         }
+    },
 
-        bulkInsertDisabilities(body, (err, results) => {
-            if (err) return res.status(500).json({ success: 400, message: err.message });
-            return res.status(200).json({success: 200, message: "Bulk insert successful", data: results });
-        });
+    getAll: async (req, res) => {
+        try {
+            const results = await getAllDisabilities();
+            return res.status(200).json({ success: 200, data: results });
+        } catch (err) {
+            return res.status(500).json({ success: 400, message: err.message });
+        }
+    },
+
+    getById: async (req, res) => {
+        try {
+            const { disability_id } = req.body; // Use ID from the request body instead of params
+            const result = await getDisabilityById(disability_id);
+            if (!result) {
+                return res.status(404).json({ success: 400, message: "Disability not found" });
+            }
+            return res.status(200).json({ success: 200, data: result });
+        } catch (err) {
+            return res.status(500).json({ success: 400, message: err.message });
+        }
+    },
+
+    update: async (req, res) => {
+        try {
+            const data = req.body;
+            const results = await updateDisability(data);
+            return res.status(200).json({ success: 200, message: "Updated successfully" });
+        } catch (err) {
+            return res.status(500).json({ success: 400, message: err.message });
+        }
+    },
+
+    remove: async (req, res) => {
+        try {
+            const { disability_id } = req.body; // Use ID from the request body instead of params
+            const results = await deleteDisability(disability_id);
+            return res.status(200).json({ success: 200, message: "Deleted successfully" });
+        } catch (err) {
+            return res.status(500).json({ success: 400, message: err.message });
+        }
+    },
+
+    getByAnimalId: async (req, res) => {
+        try {
+            const { animal_id } = req.body; // Get animal_id from request body
+            const results = await getDisabilitiesByAnimalId(animal_id);
+            return res.status(200).json({ success: 200, data: results });
+        } catch (err) {
+            return res.status(500).json({ success: 400, message: err.message });
+        }
+    },
+
+    bulkInsert: async (req, res) => {
+        try {
+            const body = req.body.disabilities;
+            if (!Array.isArray(body)) {
+                return res.status(400).json({ success: 400, message: "Disabilities must be an array" });
+            }
+            const results = await bulkInsertDisabilities(body);
+            return res.status(200).json({ success: 200, message: "Bulk insert successful", data: results });
+        } catch (err) {
+            return res.status(500).json({ success: 400, message: err.message });
+        }
     },
 };

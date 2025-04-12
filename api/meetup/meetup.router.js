@@ -1,12 +1,20 @@
 const router = require("express").Router();
-const {create,getAll,getById,update,remove,getByUser,getByPet} = require("./meetup.controller");
+const {
+    create,
+    getAll,
+    getById,
+    update,
+    remove,
+    getByUser,
+    getByPet,
+} = require("./meetup.controller");
 
 router.post("/", create);
 router.get("/", getAll);
-router.get("/:meetup_id", getById);
+router.get("/id", getById);       // ID in body
 router.patch("/", update);
-router.delete("/:meetup_id", remove);
-router.get("/user/:user_id", getByUser);
-router.get("/pet/:pet_id", getByPet);
+router.delete("/", remove);             // ID in body
+router.get("/user", getByUser);   // user_id in body
+router.get("/pet", getByPet);     // pet_id in body
 
 module.exports = router;

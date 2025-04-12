@@ -1,7 +1,11 @@
+// app.js
 const express = require('express');
 require('dotenv').config();
 const app = express();
 const logger = require('./config/logger');
+
+// Supabase client (optional to test connection here)
+const supabase = require('./config/database');
 
 // Routers
 const routes = {
@@ -60,7 +64,7 @@ app.use('/api/users', routes.users);
 // Base API Check
 app.get('/api', async (req, res) => {
   res.json({
-   success: 200,
+    success: 200,
     message: 'REST APIs are working.'
   });
 });

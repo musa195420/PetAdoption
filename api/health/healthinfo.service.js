@@ -1,85 +1,67 @@
-const pool = require("../../config/database");
+const  supabase  = require("../../config/database");
 
 module.exports = {
-    create: (data, callBack) => {
-        pool.query(
-            `INSERT INTO HealthInfo (pet_id, vaccination_id, disease_id, disability_id)
-             VALUES (?, ?, ?, ?)`,
-            [data.pet_id, data.vaccination_id, data.disease_id, data.disability_id],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
+    create: async (data) => {
+        const { error, data: result } = await supabase
+            .from("healthinfo")
+            .insert([data])
+            .select();
+
+        if (error) throw error;
+        return result[0];
     },
 
-    getAll: callBack => {
-        pool.query(`SELECT * FROM HealthInfo`, [], (err, results) => {
-            if (err) return callBack(err);
-            return callBack(null, results);
-        });
+    getAll: async () => {
+        const { data, error } = await supabase
+            .from("healthinfo")
+            .select("*");
+
+        if (error) throw error;
+        return data;
     },
 
-    getById: (id, callBack) => {
-        pool.query(`SELECT * FROM HealthInfo WHERE health_id = ?`, [id], (err, results) => {
-            if (err) return callBack(err);
-            return callBack(null, results[0]);
-        });
+    getById: async (health_id) => {
+        const { data, error } = await supabase
+            .from("healthinfo")
+            .select("*")
+            .eq("health_id", health_id)
+            .single();
+
+        if (error) throw error;
+        return data;
     },
 
-    update: (data, callBack) => {
-        const fields = [];
-        const values = [];
-    
-        if (data.pet_id !== undefined) {
-            fields.push("pet_id = ?");
-            values.push(data.pet_id);
-        }
-    
-        if (data.vaccination_id !== undefined) {
-            fields.push("vaccination_id = ?");
-            values.push(data.vaccination_id);
-        }
-    
-        if (data.disease_id !== undefined) {
-            fields.push("disease_id = ?");
-            values.push(data.disease_id);
-        }
-    
-        if (data.disability_id !== undefined) {
-            fields.push("disability_id = ?");
-            values.push(data.disability_id);
-        }
-    
-        if (!fields.length) {
-            return callBack(new Error("No fields provided to update."));
-        }
-    
-        values.push(data.health_id); // last value for WHERE clause
-    
-        const query = `UPDATE HealthInfo SET ${fields.join(", ")} WHERE health_id = ?`;
-    
-        pool.query(query, values, (err, results) => {
-            if (err) return callBack(err);
-            return callBack(null, results);
-        });
+    update: async (data) => {
+        const { health_id, ...updates } = data;
+
+        const { data: result, error } = await supabase
+            .from("healthinfo")
+            .update(updates)
+            .eq("health_id", health_id)
+            .select();
+
+        if (error) throw error;
+        return result[0];
     },
-    
-    deleteHealthInfo: (id, callBack) => {
-        pool.query(`DELETE FROM HealthInfo WHERE health_id = ?`, [id], (err, results) => {
-            if (err) return callBack(err);
-            return callBack(null, results);
-        });
+
+    deleteHealthInfo: async (health_id) => {
+        const { data, error } = await supabase
+            .from("healthinfo")
+            .delete()
+            .eq("health_id", health_id)
+            .select();
+
+        if (error) throw error;
+        return data;
     },
-    getByPetId: (pet_id, callBack) => {
-        pool.query(
-            `SELECT * FROM HealthInfo WHERE pet_id = ?`,
-            [pet_id],
-            (err, results) => {
-                if (err) return callBack(err);
-                return callBack(null, results);
-            }
-        );
+
+    getByPetId: async (pet_id) => {
+        const { data, error } = await supabase
+            .from("healthinfo")
+            .select("*")
+            .eq("pet_id", pet_id);
+
+        if (error) throw error;
+        return data;
     },
-    
 };
