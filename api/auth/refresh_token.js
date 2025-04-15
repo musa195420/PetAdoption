@@ -35,10 +35,13 @@ module.exports = {
             refreshTokens.push(newRefreshToken); // Store the new one
     
             return res.json({
-                success: 200,
+              
+                data:{
+                    success: 200,
                 message: "Token refreshed successfully",
                 accessToken: newAccessToken,
                 refreshToken: newRefreshToken
+                }
             });
         });
     },

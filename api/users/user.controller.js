@@ -37,11 +37,13 @@ module.exports = {
       const payload = { id: user.user_id, email: user.email, role: user.role };
 
       return res.status(200).json({
-        success: 200,
+       
+        data:{
+          success: 200,
         message: "Login successful",
         accessToken: generateAccessToken(payload),
         refreshToken: generateRefreshToken(payload),
-        
+        }
       });
     } catch (err) {
       return res.status(500).json({ success: 400, message: "Login error", error: err.message });
@@ -66,6 +68,26 @@ module.exports = {
       }
 
       return res.status(200).json({ success: 200, data: user });
+    } catch (err) {
+      return res.status(500).json({ success: 400, message: "DB Error", error: err.message });
+    }
+  },
+
+  getUserByEmail: async (req, res) => {
+    try {
+      const email = req.body.email;
+      const user = await getUserByEmail(email);
+
+      if (!user) {
+        return res.status(404).json({ success: 400, message: "User not found" });
+      }
+
+      return res.status(200).json({
+        data: {
+          success: 200,
+          ...user
+        }
+      });
     } catch (err) {
       return res.status(500).json({ success: 400, message: "DB Error", error: err.message });
     }
