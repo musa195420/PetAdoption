@@ -6,6 +6,7 @@ const {
   deleteUser,
   getUserByEmail,
 } = require("./user.service");
+require("dotenv").config();
 
 const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const { generateAccessToken, generateRefreshToken } = require("../auth/refresh_token");
@@ -28,21 +29,34 @@ module.exports = {
     try {
       const { email, password } = req.body;
       const user = await getUserByEmail(email);
-     
+  
       if (!user || !compareSync(password, user.password)) {
         return res.status(400).json({ success: 400, message: "Invalid Email or Password" });
       }
-
+  
       user.password = undefined;
       const payload = { id: user.user_id, email: user.email, role: user.role };
+  
+      const accessToken = generateAccessToken(payload);
+      const refreshToken = generateRefreshToken(payload);
+  
+      // Manually define the access token expiry time (same as in token generation)
+      const hours = parseInt(process.env.TOKEN_TIME); 
+      const expiresIn = new Date(Date.now() + hours * 60 * 60 * 1000); // 3 hours in seconds
+      const formatDateTime = (date) => {
+        const pad = (n, width = 2) => String(n).padStart(width, '0');
+        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ` +
+               `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}.${pad(date.getMilliseconds(), 6)}`;
+      };
 
+      const formattedExpiresIn = formatDateTime(expiresIn);
       return res.status(200).json({
-       
-        data:{
+        data: {
           success: 200,
-        message: "Login successful",
-        accessToken: generateAccessToken(payload),
-        refreshToken: generateRefreshToken(payload),
+          message: "Login successful",
+          accessToken,
+          refreshToken,
+          expiresIn:formattedExpiresIn
         }
       });
     } catch (err) {

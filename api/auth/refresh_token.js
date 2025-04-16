@@ -5,7 +5,7 @@ let refreshTokens = []; // In-memory store (use DB or Redis in production)
 
 module.exports = {
     generateAccessToken: (user) => {
-        return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "3h" });
+        return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: `${process.env.TOKEN_TIME}h` });
     },
 
     generateRefreshToken: (user) => {
@@ -29,18 +29,27 @@ module.exports = {
             const payload = { id: user.id, email: user.email };
     
             // Generate new tokens
-            const newAccessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "2h" });
+            const newAccessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: `${process.env.TOKEN_TIME}h` });
             const newRefreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET);
-    
+            const hours = parseInt(process.env.TOKEN_TIME); // e.g., 3
+            const expiresIn = new Date(Date.now() + hours * 60 * 60 * 1000); 
+            const formatDateTime = (date) => {
+                const pad = (n, width = 2) => String(n).padStart(width, '0');
+                return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ` +
+                       `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}.${pad(date.getMilliseconds(), 6)}`;
+              };
+        
+              const formattedExpiresIn = formatDateTime(expiresIn);
             refreshTokens.push(newRefreshToken); // Store the new one
-    
+            
             return res.json({
               
                 data:{
                     success: 200,
                 message: "Token refreshed successfully",
                 accessToken: newAccessToken,
-                refreshToken: newRefreshToken
+                refreshToken: newRefreshToken,
+                expiresIn:formattedExpiresIn,
                 }
             });
         });
