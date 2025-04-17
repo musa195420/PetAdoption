@@ -81,5 +81,40 @@ module.exports = {
     } catch (err) {
       throw err;
     }
-  }
+  },
+  uploadPetImageService: async (file, petId) => {
+    const fileName = `${petId}/${Date.now()}_${file.originalname}`;
+
+    const { data, error } = await supabase.storage
+      .from('petimage')
+      .upload(fileName, file.buffer, {
+        contentType: file.mimetype,
+        upsert: true,
+      });
+
+    if (error) {
+      console.error("Supabase upload error:", error);
+      throw new Error("Supabase upload failed");
+    }
+
+    const { data: publicUrlData } = supabase
+      .storage
+      .from('petimage')
+      .getPublicUrl(fileName);
+
+    const imageUrl = publicUrlData.publicUrl;
+
+    const { error: dbError } = await supabase
+      .from('pet')
+      .update({ image: imageUrl })
+      .eq('pet_id', petId);
+
+    if (dbError) {
+      console.error("Supabase DB update error:", dbError);
+      throw new Error("Failed to update pet image URL");
+    }
+
+    return imageUrl;
+  },
+
 };

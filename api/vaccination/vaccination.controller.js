@@ -5,18 +5,18 @@ module.exports = {
         const body = req.body;
         try {
             const results = await createVaccination(body);
-            return res.status(200).json({ success: 200, data: results });
+            return res.status(200).json({ success:true,status: 200,  data: results });
         } catch (err) {
-            return res.status(500).json({ success: 400, message: err.message });
+            return res.status(500).json({ success:false,status: 400, message: err.message });
         }
     },
 
     findAll: async (req, res) => {
         try {
             const results = await getVaccinations();
-            return res.status(200).json({ success: 200, data: results });
+            return res.status(200).json({ success:true,status: 200,  data: results });
         } catch (err) {
-            return res.status(500).json({ success: 400, message: err.message });
+            return res.status(500).json({ success:false,status: 400, message: err.message });
         }
     },
 
@@ -24,10 +24,10 @@ module.exports = {
         const { vaccine_id } = req.body; // Now taking vaccine_id from the request body
         try {
             const result = await getVaccinationById(vaccine_id); // Use vaccine_id from the body
-            if (!result) return res.status(404).json({ success: 400, message: "Not found" });
-            return res.status(200).json({ success: 200, data: result });
+            if (!result) return res.status(404).json({ success:false,status: 400, message: "Not found" });
+            return res.status(200).json({ success:true,status: 200,  data: result });
         } catch (err) {
-            return res.status(500).json({ success: 400, message: err.message });
+            return res.status(500).json({ success:false,status: 400, message: err.message });
         }
     },
 
@@ -35,9 +35,9 @@ module.exports = {
         const data = req.body;
         try {
             await updateVaccination(data);
-            return res.status(200).json({ success: 200, message: "Vaccination updated successfully" });
+            return res.status(200).json({ success:true,status: 200,  message: "Vaccination updated successfully" });
         } catch (err) {
-            return res.status(500).json({ success: 400, message: err.message });
+            return res.status(500).json({ success:false,status: 400, message: err.message });
         }
     },
 
@@ -45,9 +45,9 @@ module.exports = {
         const { vaccine_id } = req.body; // Now taking vaccine_id from the request body
         try {
             await deleteVaccination(vaccine_id); // Use vaccine_id from the body
-            return res.status(200).json({ success: 200, message: "Vaccination deleted" });
+            return res.status(200).json({ success:true,status: 200,  message: "Vaccination deleted" });
         } catch (err) {
-            return res.status(500).json({ success: 400, message: err.message });
+            return res.status(500).json({ success:false,status: 400, message: err.message });
         }
     },
 
@@ -55,9 +55,9 @@ module.exports = {
         const vaccines = req.body.vaccinations;
         try {
             const results = await bulkInsertVaccinations(vaccines);
-            return res.status(200).json({ success: 200, data: results });
+            return res.status(200).json({ success:true,status: 200,  data: results });
         } catch (err) {
-            return res.status(500).json({ success: 400, message: err.message });
+            return res.status(500).json({ success:false,status: 400, message: err.message });
         }
     },
 };

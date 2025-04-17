@@ -4,7 +4,7 @@ const {
   getUsers,
   updateUser,
   deleteUser,
-  getUserByEmail,
+  getUserByEmail,uploadUserImageService
 } = require("./user.service");
 require("dotenv").config();
 
@@ -18,10 +18,11 @@ module.exports = {
       const salt = genSaltSync(10);
       body.password = hashSync(body.password, salt);
   
-      const result = await createUser(body);
-      return res.status(201).json({ success: 200, data: result });
+      const user = await createUser(body);
+      user.success = "200";
+      return res.status(201).json({ success:true,status: 200,data: user });
     } catch (err) {
-      return res.status(500).json({ success: 400, message: "DB error", error: err.message });
+      return res.status(500).json({ success:false,status: 400, message: "DB error", error: err.message });
     }
   },
 
@@ -31,7 +32,7 @@ module.exports = {
       const user = await getUserByEmail(email);
   
       if (!user || !compareSync(password, user.password)) {
-        return res.status(400).json({ success: 400, message: "Invalid Email or Password" });
+        return res.status(400).json({ success:false,status: 400, message: "Invalid Email or Password" });
       }
   
       user.password = undefined;
@@ -52,7 +53,7 @@ module.exports = {
       const formattedExpiresIn = formatDateTime(expiresIn);
       return res.status(200).json({
         data: {
-          success: 200,
+          success:true,status: 200, 
           message: "Login successful",
           accessToken,
           refreshToken,
@@ -60,16 +61,16 @@ module.exports = {
         }
       });
     } catch (err) {
-      return res.status(500).json({ success: 400, message: "Login error", error: err.message });
+      return res.status(500).json({ success:false,status: 400, message: "Login error", error: err.message });
     }
   },
 
   getAllUsers: async (req, res) => {
     try {
       const users = await getUsers(); // Await the promise returned by getUsers
-      return res.status(200).json({ success: 200, data: users });
+      return res.status(200).json({ success:true,status: 200,  data: users });
     } catch (err) {
-      return res.status(500).json({ success: 400, message: "DB Error", error: err.message });
+      return res.status(500).json({ success:false,status: 400, message: "DB Error", error: err.message });
     }
   },
   getUserById: async (req, res) => {
@@ -78,12 +79,12 @@ module.exports = {
       const user = await getUserById(id);
 
       if (!user) {
-        return res.status(404).json({ success: 400, message: "User not found" });
+        return res.status(404).json({ success:false,status: 400, message: "User not found" });
       }
 
-      return res.status(200).json({ success: 200, data: user });
+      return res.status(200).json({ success:true,status: 200,  data: user });
     } catch (err) {
-      return res.status(500).json({ success: 400, message: "DB Error", error: err.message });
+      return res.status(500).json({ success:false,status: 400, message: "DB Error", error: err.message });
     }
   },
 
@@ -93,17 +94,17 @@ module.exports = {
       const user = await getUserByEmail(email);
 
       if (!user) {
-        return res.status(404).json({ success: 400, message: "User not found" });
+        return res.status(404).json({ success:false,status: 400, message: "User not found" });
       }
 
       return res.status(200).json({
         data: {
-          success: 200,
+          success:true,status: 200, 
           ...user
         }
       });
     } catch (err) {
-      return res.status(500).json({ success: 400, message: "DB Error", error: err.message });
+      return res.status(500).json({ success:false,status: 400, message: "DB Error", error: err.message });
     }
   },
 
@@ -111,9 +112,9 @@ module.exports = {
     try {
       const data = req.body;
       const result = await updateUser(data);
-      return res.status(200).json({ success: 200, message: "User updated", data: result });
+      return res.status(200).json({ success:true,status: 200,  message: "User updated", data: result });
     } catch (err) {
-      return res.status(500).json({ success: 400, message: "Update error", error: err.message });
+      return res.status(500).json({ success:false,status: 400, message: "Update error", error: err.message });
     }
   },
 
@@ -121,14 +122,29 @@ module.exports = {
     try {
       const result = await deleteUser(req.body);
       if (!result) {
-        return res.status(404).json({ success: 400, message: "User not found" });
+        return res.status(404).json({ success:false,status: 400, message: "User not found" });
       }
-      return res.json({ success: 200, message: "User deleted successfully" });
+      return res.json({ success:true,status: 200,  message: "User deleted successfully" });
     } catch (err) {
-      return res.status(500).json({ success: 400, message: "Delete error", error: err.message });
+      return res.status(500).json({ success:false,status: 400, message: "Delete error", error: err.message });
     }
   },
     
-
-  };
+  uploadUserImage: async (req, res) => {
+    try {
+      const file = req.file;
+      const userId = req.body.user_id;
+  
+      if (!file || !userId) {
+        return res.status(400).json({ success: false, message: "Image or User ID missing" });
+      }
+  
+      const imageUrl = await uploadUserImageService(file, userId);
+      return res.status(200).json({ success: true, imageUrl });
+    } catch (err) {
+      console.error("Upload error:", err);
+      return res.status(500).json({ success: false, message: "Upload failed", error: err.message });
+    }
+  }
+};
   

@@ -45,7 +45,7 @@ module.exports = {
             return res.json({
               
                 data:{
-                    success: 200,
+                    success:true,status: 200, 
                 message: "Token refreshed successfully",
                 accessToken: newAccessToken,
                 refreshToken: newRefreshToken,

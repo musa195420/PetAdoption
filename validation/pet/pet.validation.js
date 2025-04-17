@@ -7,7 +7,8 @@ const addPetValidation = async(req, res, next) => {
         {
             res.json(
                 {
-                    success:0,
+                    success:false,
+                        status:400,
                     message:value.error.details[0].message
                 }
             )

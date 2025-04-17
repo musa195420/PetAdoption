@@ -7,9 +7,10 @@ module.exports = {
       .from('users')
       .insert([{ email, phone_number, password, role, device_id }])
       .select();
-
+  
     if (error) throw new Error(error.message);
-    return result;
+  
+    return result[0]; // return the object directly
   },
 
   getUserById: async (id) => {
@@ -77,5 +78,39 @@ module.exports = {
    
     if (error) throw new Error(error.message);
     return user;
+  },
+  uploadUserImageService: async (file, userId) => {
+    const fileName = `${userId}/${Date.now()}_${file.originalname}`;
+
+    const { data, error } = await supabase.storage
+      .from('userimage')
+      .upload(fileName, file.buffer, {
+        contentType: file.mimetype,
+        upsert: true,
+      });
+
+    if (error) {
+      console.error("Supabase upload error:", error);
+      throw new Error("Supabase upload failed");
+    }
+
+    const { data: publicUrlData } = supabase
+      .storage
+      .from('userimage')
+      .getPublicUrl(fileName);
+
+    const imageUrl = publicUrlData.publicUrl;
+
+    const { error: dbError } = await supabase
+      .from('users')
+      .update({ profile_image: imageUrl })
+      .eq('user_id', userId);
+
+    if (dbError) {
+      console.error("Supabase DB update error:", dbError);
+      throw new Error("Failed to update user image URL");
+    }
+
+    return imageUrl;
   },
 };

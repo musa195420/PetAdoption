@@ -16,7 +16,7 @@ module.exports = {
                         verify(token, process.env.REFRESH_TOKEN_SECRET, (err2, decoded2) => {
                             if (err2) {
                                 return res.json({
-                                    success: 400,
+                                    success:false,status: 400,
                                     message: "Invalid Token: " + err2.message,
                                 });
                             } else {
@@ -26,7 +26,7 @@ module.exports = {
                         });
                     } else {
                         return res.json({
-                            success: 400,
+                            success:false,status: 400,
                             message: "Invalid Token: " + err.message,
                         });
                     }
@@ -37,7 +37,7 @@ module.exports = {
             });
         } else {
             return res.json({
-                success: 400,
+                success:false,status: 400,
                 message: "Access denied! Unauthorized user",
             });
         }

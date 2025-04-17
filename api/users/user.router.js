@@ -1,9 +1,13 @@
-const{    registerUser,getAllUsers,getUserById,updateUser,deleteUser,login,getUserByEmail}= require("./user.controller");
+const{    registerUser,getAllUsers,getUserById,updateUser,deleteUser,login,getUserByEmail,uploadUserImage}= require("./user.controller");
 const {addUserValdation} = require("../../validation/users/user.validation");
 const { refreshTokenHandler, logout } = require("../auth/refresh_token");
 const router = require ("express").Router();
 const {checkToken} =require("../auth/token_validation");
+const upload = require("../../config/upload"); 
 
+
+
+router.post("/upload-profile", upload.single('image'), uploadUserImage);
 router.post("/", addUserValdation, registerUser);
 router.get("/",checkToken,getAllUsers);
 router.get("/id/",checkToken,getUserById);

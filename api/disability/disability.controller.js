@@ -13,18 +13,18 @@ module.exports = {
         try {
             const body = req.body;
             const results = await createDisability(body);
-            return res.status(200).json({ success: 200, data: results });
+            return res.status(200).json({ success:true,status: 200,  data: results });
         } catch (err) {
-            return res.status(500).json({ success: 400, message: err.message });
+            return res.status(500).json({ success:false,status: 400, message: err.message });
         }
     },
 
     getAll: async (req, res) => {
         try {
             const results = await getAllDisabilities();
-            return res.status(200).json({ success: 200, data: results });
+            return res.status(200).json({ success:true,status: 200,  data: results });
         } catch (err) {
-            return res.status(500).json({ success: 400, message: err.message });
+            return res.status(500).json({ success:false,status: 400, message: err.message });
         }
     },
 
@@ -33,11 +33,11 @@ module.exports = {
             const { disability_id } = req.body; // Use ID from the request body instead of params
             const result = await getDisabilityById(disability_id);
             if (!result) {
-                return res.status(404).json({ success: 400, message: "Disability not found" });
+                return res.status(404).json({ success:false,status: 400, message: "Disability not found" });
             }
-            return res.status(200).json({ success: 200, data: result });
+            return res.status(200).json({ success:true,status: 200,  data: result });
         } catch (err) {
-            return res.status(500).json({ success: 400, message: err.message });
+            return res.status(500).json({ success:false,status: 400, message: err.message });
         }
     },
 
@@ -45,9 +45,9 @@ module.exports = {
         try {
             const data = req.body;
             const results = await updateDisability(data);
-            return res.status(200).json({ success: 200, message: "Updated successfully" });
+            return res.status(200).json({ success:true,status: 200,  message: "Updated successfully" });
         } catch (err) {
-            return res.status(500).json({ success: 400, message: err.message });
+            return res.status(500).json({ success:false,status: 400, message: err.message });
         }
     },
 
@@ -55,9 +55,9 @@ module.exports = {
         try {
             const { disability_id } = req.body; // Use ID from the request body instead of params
             const results = await deleteDisability(disability_id);
-            return res.status(200).json({ success: 200, message: "Deleted successfully" });
+            return res.status(200).json({ success:true,status: 200,  message: "Deleted successfully" });
         } catch (err) {
-            return res.status(500).json({ success: 400, message: err.message });
+            return res.status(500).json({ success:false,status: 400, message: err.message });
         }
     },
 
@@ -65,9 +65,9 @@ module.exports = {
         try {
             const { animal_id } = req.body; // Get animal_id from request body
             const results = await getDisabilitiesByAnimalId(animal_id);
-            return res.status(200).json({ success: 200, data: results });
+            return res.status(200).json({ success:true,status: 200,  data: results });
         } catch (err) {
-            return res.status(500).json({ success: 400, message: err.message });
+            return res.status(500).json({ success:false,status: 400, message: err.message });
         }
     },
 
@@ -75,12 +75,12 @@ module.exports = {
         try {
             const body = req.body.disabilities;
             if (!Array.isArray(body)) {
-                return res.status(400).json({ success: 400, message: "Disabilities must be an array" });
+                return res.status(400).json({ success:false,status: 400, message: "Disabilities must be an array" });
             }
             const results = await bulkInsertDisabilities(body);
-            return res.status(200).json({ success: 200, message: "Bulk insert successful", data: results });
+            return res.status(200).json({ success:true,status: 200,  message: "Bulk insert successful", data: results });
         } catch (err) {
-            return res.status(500).json({ success: 400, message: err.message });
+            return res.status(500).json({ success:false,status: 400, message: err.message });
         }
     },
 };

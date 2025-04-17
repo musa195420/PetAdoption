@@ -64,7 +64,8 @@ app.use('/api/users', routes.users);
 // Base API Check
 app.get('/api', async (req, res) => {
   res.json({
-    success: 200,
+    status:200,
+    success: true,
     message: 'REST APIs are working.'
   });
 });
@@ -72,7 +73,9 @@ app.get('/api', async (req, res) => {
 // Error Handler for Uncaught Routes
 app.use((req, res) => {
   res.status(404).json({
-    success: 400,
+    status:400,
+    success: false,
+    
     message: 'Route not found'
   });
 });
@@ -80,7 +83,7 @@ app.use((req, res) => {
 // Global Error Handler
 app.use((err, req, res, next) => {
   logger.error('Unhandled error:', err);
-  res.status(500).json({ success: 400, message: 'Internal server error' });
+  res.status(500).json({ success:false,status: 500, message: 'Internal server error' });
 });
 
 // Start Server

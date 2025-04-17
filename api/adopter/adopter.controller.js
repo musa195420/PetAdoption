@@ -11,10 +11,10 @@ module.exports = {
     const body = req.body;
     try {
       const results = await createAdopterProfile(body);
-      return res.status(200).json({ success: 200, data: results });
+      return res.status(200).json({ success:true,status: 200, data: results });
     } catch (err) {
       console.error(err);
-      return res.status(500).json({ success: 400, message: "Database Error " + err.message });
+      return res.status(500).json({ success:false,status: 400, message: "Database Error " + err.message });
     }
   },
 
@@ -23,22 +23,22 @@ module.exports = {
     try {
       const result = await getAdopterById(id);
       if (!result) {
-        return res.status(404).json({ success: 400, message: "Adopter not found" });
+        return res.status(404).json({ success:false,status: 400, message: "Adopter not found" });
       }
-      return res.status(200).json({ success: 200, data: result });
+      return res.status(200).json({ success:true,status: 200, data: result });
     } catch (err) {
       console.error(err);
-      return res.status(500).json({ success: 400, message: "Database Error " + err.message });
+      return res.status(500).json({ success:false,status: 400, message: "Database Error " + err.message });
     }
   },
 
   getAllAdopters: async (req, res) => {
     try {
       const results = await getAllAdopters();
-      return res.status(200).json({ success: 200, data: results });
+      return res.status(200).json({ success:true,status: 200, data: results });
     } catch (err) {
       console.error(err);
-      return res.status(500).json({ success: 400, message: "Database Error " + err.message });
+      return res.status(500).json({ success:false,status: 400, message: "Database Error " + err.message });
     }
   },
 
@@ -46,10 +46,10 @@ module.exports = {
     const body = req.body;
     try {
       await updateAdopter(body);
-      return res.status(200).json({ success: 200, message: "Adopter updated successfully" });
+      return res.status(200).json({ success:true,status: 200, message: "Adopter updated successfully" });
     } catch (err) {
       console.error(err);
-      return res.status(500).json({ success: 400, message: "Database Error " + err.message });
+      return res.status(500).json({ success:false,status: 400, message: "Database Error " + err.message });
     }
   },
 
@@ -57,10 +57,10 @@ module.exports = {
     const { adopter_id } = req.body;
     try {
       await deleteAdopter(adopter_id);
-      return res.status(200).json({ success: 200, message: "Adopter deleted successfully" });
+      return res.status(200).json({ success:true,status: 200,  message: "Adopter deleted successfully" });
     } catch (err) {
       console.error(err);
-      return res.status(500).json({ success: 400, message: "Database Error " + err.message });
+      return res.status(500).json({ success:false,status: 400, message: "Database Error " + err.message });
     }
   },
 };
