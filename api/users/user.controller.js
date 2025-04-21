@@ -4,7 +4,8 @@ const {
   getUsers,
   updateUser,
   deleteUser,
-  getUserByEmail,uploadUserImageService
+  getUserByEmail,uploadUserImageService,
+  getProfileById
 } = require("./user.service");
 require("dotenv").config();
 
@@ -12,6 +13,18 @@ const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const { generateAccessToken, generateRefreshToken } = require("../auth/refresh_token");
 
 module.exports = {
+
+   getProfileById : async (req, res) => {
+    try {
+      const id = req.body.user_id || req.query.user_id; // support GET or POST
+      if (!id) return res.status(400).json({ error: "Missing user_id" });
+  
+      const userData = await  getProfileById(id);
+      res.status(200).json(userData);
+    } catch (error) {
+      res.status(500).json({success:false,status: 400, message: "DB error", error: error.message });
+    }
+  },
   registerUser: async (req, res) => {
     try {
       const body = req.body;

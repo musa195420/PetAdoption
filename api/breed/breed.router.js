@@ -6,8 +6,9 @@ const {
   updateBreed,
   deleteBreed,
   bulkBreedInsert,
+  getBreedByAnimalId
 } = require("./breed.controller");
-
+router.post("/animal", getBreedByAnimalId);
 router.post("/", addBreed);
 router.get("/", getAllBreeds);
 router.post("/id/", getBreedById); // get by ID using body

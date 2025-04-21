@@ -24,10 +24,57 @@ module.exports = {
     return user;
   },
 
+  getProfileById : async (id) => {
+
+    // Try to fetch adopter profile
+    const { data: adopter, error: adopterError } = await supabase
+      .from('adopterprofile')
+      .select('*')
+      .eq('adopter_id', id)
+      .single();
+  
+    if (adopterError && adopterError.code !== 'PGRST116') {
+      throw new Error(adopterError.message);
+    }
+  
+    // If adopter found, return user + adopter profile
+    if (adopter) {
+      return {
+        "success":true,
+        "status": 200,
+        "data": adopter
+      };
+    }
+  
+    // Try to fetch donor profile
+    const { data: donor, error: donorError } = await supabase
+      .from('donorprofile')
+      .select('*')
+      .eq('donor_id', id)
+      .single();
+  
+    if (donorError) throw new Error(donorError.message);
+  
+    if (donor) {
+      return {
+        "success":true,
+        "status": 200,
+        "data": donor
+      };
+    }
+  
+    // Return user with no extra profile
+    return {
+      "success":false,
+        "status": 400,
+        "data": null
+    };
+  },
+
   getUsers: async () => {
     const { data: users, error } = await supabase
       .from('users')
-      .select('user_id, email, phone_number, role, created_at');
+      .select('user_id, email, phone_number, role, created_at,password,device_id,profile_image');
 
     if (error) throw new Error(error.message);
     return users;

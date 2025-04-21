@@ -57,5 +57,14 @@ module.exports = {
     const { data, error } = await supabase.from("breed").insert(breedList);
     if (error) throw error;
     return data;
+  },
+  getBreedsByAnimalId: async (animal_id) => {
+    const { data, error } = await supabase
+      .from("breed")
+      .select("*")
+      .eq("animal_id", animal_id);
+  
+    if (error) throw error;
+    return data;
   }
 };

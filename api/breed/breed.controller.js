@@ -4,7 +4,7 @@ const {
     getBreedById,
     updateBreed,
     deleteBreed,
-    bulkInsertBreeds,
+    bulkInsertBreeds,getBreedsByAnimalId
   } = require("./breed.service");
   
   module.exports = {
@@ -63,5 +63,14 @@ const {
         res.status(500).json({ success:false,status: 400, message: err.message });
       }
     },
+    getBreedByAnimalId: async (req, res) => {
+      try {
+        const { animal_id } = req.body;
+        const result = await getBreedsByAnimalId(animal_id);
+        res.status(200).json({ success: true, status: 200, data: result });
+      } catch (err) {
+        res.status(500).json({ success: false, status: 400, message: err.message });
+      }
+    }
   };
   

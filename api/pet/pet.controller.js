@@ -1,4 +1,4 @@
-const { createPet, getAllPets, getPetById, deletePet,getPetsByDonorId,uploadPetImageService } = require("./pet.service");
+const { createPet, getAllPets, getPetById, deletePet,getPetsByDonorId,uploadPetImageService,getAllPetsWithUserEmail } = require("./pet.service");
 
 module.exports = {
   createNewPet: async (req, res) => {
@@ -34,7 +34,22 @@ module.exports = {
       });
     }
   },
-
+  fetchAllPetsWithEmail: async (req, res) => {
+    try {
+      const results = await getAllPetsWithUserEmail();
+      return res.json({
+        success: true,
+        status: 200,
+        data: results
+      });
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        status: 400,
+        message: "Failed to fetch pets with emails "+err,
+      });
+    }
+  },
   fetchPetById: async (req, res) => {
     const pet_id = req.body.pet_id;
 
@@ -79,7 +94,10 @@ module.exports = {
     }
   },
   fetchPetsByDonorId: async (req, res) => {
-    const donorId = req.params.donor_id;
+    let donorId = req.body.donor_id;
+    if (!donorId) {
+      donorId = req.body.user_id;
+    }
 
     try {
       const results = await getPetsByDonorId(donorId);
