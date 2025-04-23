@@ -1,4 +1,4 @@
-const { createPet, getAllPets, getPetById, deletePet,getPetsByDonorId,uploadPetImageService,getAllPetsWithUserEmail } = require("./pet.service");
+const { createPet, getAllPets, getPetById, deletePet,getPetsByDonorId,uploadPetImageService,getAllPetsWithUserEmail,updatePet } = require("./pet.service");
 
 module.exports = {
   createNewPet: async (req, res) => {
@@ -19,7 +19,34 @@ module.exports = {
       });
     }
   },
-
+  updatePetById: async (req, res) => {
+    const data = req.body;
+  
+    if (!data.pet_id) {
+      return res.status(400).json({
+        success: false,
+        status: 400,
+        message: "Pet ID is required for update",
+      });
+    }
+  
+    try {
+      const result = await updatePet(data);
+      return res.status(200).json({
+        success: true,
+        status: 200,
+        message: "Pet updated successfully",
+        data: result,
+      });
+    } catch (err) {
+      console.error("Update Error:", err.message);
+      return res.status(500).json({
+        success: false,
+        status: 500,
+        message: "Failed to update pet: " + err.message,
+      });
+    }
+  },
   fetchAllPets: async (req, res) => {
     try {
       const results = await getAllPets();
@@ -72,27 +99,28 @@ module.exports = {
 
   deletePetById: async (req, res) => {
     const pet_id = req.body.pet_id;
-
-
+  
     try {
+     // Log the pet_id being deleted
+  
       const result = await deletePet(pet_id);
-      if (!result || result.length === 0) {
-        return res.status(404).json({
-          success:false,status: 400,
-          message: "Pet not found"
-        });
-      }
+     
+  
       return res.json({
-        success:true,status: 200, 
+        success: true,
+        status: 200, 
         message: "Pet deleted successfully"
       });
     } catch (err) {
+      console.error("Error in deletePetById: ", err.message); // Log the error in the route handler
       return res.status(500).json({
-        success:false,status: 400,
+        success: false,
+        status: 500,  // Corrected status code for internal server error
         message: "Database Error: " + err.message
       });
     }
   },
+  
   fetchPetsByDonorId: async (req, res) => {
     let donorId = req.body.donor_id;
     if (!donorId) {

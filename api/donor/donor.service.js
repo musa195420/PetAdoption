@@ -67,12 +67,12 @@ module.exports = {
     }
   },
 
-  deleteDonor: async (data) => {
+  deleteDonor: async (id) => {
     try {
       const { error, data: result } = await supabase
         .from("donorprofile")
         .delete()
-        .eq("donor_id", data.donor_id);
+        .eq("donor_id", id);
 
       if (error) throw error;
       return result;

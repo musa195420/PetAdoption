@@ -19,9 +19,12 @@ module.exports = {
   },
 
   getDonorById: async (req, res) => {
-    const donor_id = req.body.donor_id;
+    let donorId = req.body.donor_id;
+    if (!donorId) {
+      donorId = req.body.user_id;
+    }
     try {
-      const result = await getDonorById(donor_id);
+      const result = await getDonorById(donorId);
       if (!result) {
         return res.status(404).json({ success:false,status: 400, message: "Donor not found" });
       }
@@ -43,24 +46,30 @@ module.exports = {
   },
 
   updateDonor: async (req, res) => {
-    const body = req.body;
+    let data = req.body;
+  
     try {
-      const result = await updateDonor(body);
+      const result = await updateDonor(data);
       return res.status(200).json({ success:true,status: 200,  message: "Donor updated successfully" });
     } catch (err) {
       console.log(err);
-      return res.status(500).json({ success:false,status: 400, message: "Database Error" });
+      return res.status(500).json({ success:false,status: 400, message: "Database Error"+err });
     }
   },
 
   deleteDonor: async (req, res) => {
-    const data = req.body;
+     
+    let donorId = req.body.donor_id;
+    if (!donorId) {
+      donorId = req.body.user_id;
+    }
+   
     try {
-      const result = await deleteDonor(data);
+      const result = await deleteDonor(donorId);
       return res.status(200).json({ success:true,status: 200,  message: "Donor deleted successfully" });
     } catch (err) {
       console.log(err);
-      return res.status(500).json({ success:false,status: 400, message: "Database Error" });
+      return res.status(500).json({ success:false,status: 400, message: "Database Error"+err });
     }
   },
 };

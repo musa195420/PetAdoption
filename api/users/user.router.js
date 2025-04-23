@@ -10,7 +10,7 @@ const upload = require("../../config/upload");
 router.post("/upload-profile", upload.single('image'), uploadUserImage);
 router.post("/", addUserValdation, registerUser);
 router.get("/",checkToken,getAllUsers);
-router.get("/id/",checkToken,getUserById);
+router.post("/id/",checkToken,getUserById);
 router.post("/id/profile", checkToken, getProfileById);
 router.patch("/",checkToken,updateUser);
 router.delete("/",checkToken,deleteUser);

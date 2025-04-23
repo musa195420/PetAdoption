@@ -19,9 +19,12 @@ module.exports = {
   },
 
   getAdopterById: async (req, res) => {
-    const id = req.body.adopter_id;
+    let adopterId = req.body.adopter_id;
+    if (!adopterId) {
+      adopterId = req.body.user_id;
+    }
     try {
-      const result = await getAdopterById(id);
+      const result = await getAdopterById(adopterId);
       if (!result) {
         return res.status(404).json({ success:false,status: 400, message: "Adopter not found" });
       }
@@ -43,9 +46,11 @@ module.exports = {
   },
 
   updateAdopter: async (req, res) => {
-    const body = req.body;
+  
+    let data = req.body;
+    
     try {
-      await updateAdopter(body);
+      await updateAdopter(data);
       return res.status(200).json({ success:true,status: 200, message: "Adopter updated successfully" });
     } catch (err) {
       console.error(err);
@@ -54,9 +59,13 @@ module.exports = {
   },
 
   deleteAdopter: async (req, res) => {
-    const { adopter_id } = req.body;
+    
+    let adopterId = req.body.adopter_id;
+    if (!adopterId) {
+      adopterId = req.body.user_id;
+    }
     try {
-      await deleteAdopter(adopter_id);
+      await deleteAdopter(adopterId);
       return res.status(200).json({ success:true,status: 200,  message: "Adopter deleted successfully" });
     } catch (err) {
       console.error(err);

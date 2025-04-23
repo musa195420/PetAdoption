@@ -17,11 +17,11 @@ module.exports = {
     return result;
   },
 
-  getAdopterById: async (id) => {
+  getAdopterById: async (adopterId) => {
     const { data, error } = await supabase
       .from("adopterprofile")
       .select("*")
-      .eq("adopter_id", id)
+      .eq("adopter_id", adopterId)
       .single(); // since we expect one result
 
     if (error) throw error;
