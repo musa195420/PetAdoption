@@ -17,13 +17,49 @@ module.exports = {
 
     getVaccinations: async () => {
         try {
-            const { data, error } = await supabase.from('vaccination').select('*');
+            const { data, error } = await supabase
+                .from('vaccination')
+                .select('vaccine_id, animal_id, name, description, animaltype(name)');
+    
             if (error) throw new Error(error.message);
-            return data;
+    
+            const formattedData = data.map(vaccine => ({
+                vaccine_id: vaccine.vaccine_id,
+                animal_id: vaccine.animal_id,
+                name: vaccine.name,
+                description: vaccine.description,
+                animal: vaccine.animaltype?.name || null  // Add animal name
+            }));
+    
+            return formattedData;
         } catch (err) {
             throw err;
         }
     },
+
+    getVaccinationByAnimalId: async (animal_id) => {
+        try {
+            const { data, error } = await supabase
+                .from('vaccination')
+                .select('vaccine_id, animal_id, name, description, animaltype(name)')
+                .eq('animal_id', animal_id);
+    
+            if (error) throw new Error(error.message);
+    
+            const formattedData = data.map(vaccine => ({
+                vaccine_id: vaccine.vaccine_id,
+                animal_id: vaccine.animal_id,
+                name: vaccine.name,
+                description: vaccine.description,
+                animal: vaccine.animaltype?.name || null
+            }));
+    
+            return formattedData;
+        } catch (err) {
+            throw err;
+        }
+    },
+    
 
     getVaccinationById: async (vaccine_id) => {
         try {

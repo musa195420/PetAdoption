@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { checkToken } = require("../auth/token_validation");
-const { create, findAll, findOne, update, remove, bulkInsert } = require("./vaccination.controller");
-
+const { create, findAll, findOne, update, remove, bulkInsert ,findByAnimalId} = require("./vaccination.controller");
+router.post("/animal/", checkToken, findByAnimalId);
 router.post("/", checkToken, create);
 router.get("/", checkToken, findAll);
 router.post("/id/", checkToken, findOne); // Changed to POST for find

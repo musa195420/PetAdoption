@@ -1,4 +1,4 @@
-const { createVaccination, getVaccinations, getVaccinationById, updateVaccination, deleteVaccination, bulkInsertVaccinations } = require("./vaccination.service");
+const { createVaccination, getVaccinations, getVaccinationById, updateVaccination, deleteVaccination, bulkInsertVaccinations ,getVaccinationByAnimalId} = require("./vaccination.service");
 
 module.exports = {
     create: async (req, res) => {
@@ -17,6 +17,22 @@ module.exports = {
             return res.status(200).json({ success:true,status: 200,  data: results });
         } catch (err) {
             return res.status(500).json({ success:false,status: 400, message: err.message });
+        }
+    },
+
+    findByAnimalId: async (req, res) => {
+        try {
+            const { animal_id } = req.body;
+    
+            if (!animal_id) {
+                return res.status(400).json({ success: false, status: 400, message: "animal_id is required." });
+            }
+    
+            const results = await getVaccinationByAnimalId(animal_id);
+    
+            return res.status(200).json({ success: true, status: 200, data: results });
+        } catch (err) {
+            return res.status(500).json({ success: false, status: 500, message: err.message });
         }
     },
 

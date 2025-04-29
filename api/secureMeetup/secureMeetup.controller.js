@@ -3,7 +3,7 @@ const {
     getAllSecureMeetups,
     getSecureMeetupById,
     updateSecureMeetup,
-    deleteSecureMeetup
+    deleteSecureMeetup,uploadSecureMeetupImages
 } = require("./secureMeetup.service");
 
 module.exports = {
@@ -41,9 +41,7 @@ module.exports = {
     update: async (req, res) => {
         try {
             const result = await updateSecureMeetup(req.body);
-            if (!result) {
-                return res.status(404).json({ status: 404, success: false, message: "Update failed" });
-            }
+            
             res.status(200).json({ status: 200,success: true, data: result });
         } catch (err) {
             res.status(500).json({ status: 500, success: false, message: err.message });
@@ -54,12 +52,26 @@ module.exports = {
         try {
             const { secure_meetup_id } = req.body; // Get id from body
             const result = await deleteSecureMeetup(secure_meetup_id);
-            if (!result) {
-                return res.status(404).json({ status: 404, success: false, message: "Meetup not found or delete failed" });
-            }
+          
             res.status(200).json({ status: 200,success: true, message: "Deleted successfully" });
         } catch (err) {
             res.status(500).json({ status: 500, success: false, message: err.message });
         }
-    }
+    },
+    uploadSecureImages: async (req, res) => {
+        try {
+          const files = req.files;
+          const meetupId = req.body.meetup_id;
+      
+          if (!files || !meetupId) {
+            return res.status(400).json({ success: false, message: "Images or Meetup ID missing" });
+          }
+      
+          const imageUrls = await uploadSecureMeetupImages(files, meetupId);
+          return res.status(200).json({ success: true, data: imageUrls });
+        } catch (err) {
+          console.error("Upload error:", err);
+          return res.status(500).json({ success: false, message: "Upload failed", error: err.message });
+        }
+      }
 };

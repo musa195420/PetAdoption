@@ -12,9 +12,21 @@ module.exports = {
   },
 
   getBreeds: async () => {
-    const { data, error } = await supabase.from("breed").select("*");
+    const { data, error } = await supabase
+      .from("breed")
+      .select("breed_id, animal_id, name, animaltype(name)");
+  
     if (error) throw error;
-    return data;
+  
+    // Transform the result to include only desired fields
+    const formattedData = data.map(breed => ({
+      breed_id: breed.breed_id,
+      animal_id: breed.animal_id,
+      name: breed.name,
+      animal: breed.animaltype?.name || null  // Flattened animal name
+    }));
+  
+    return formattedData;
   },
 
   getBreedById: async (breed_id) => {

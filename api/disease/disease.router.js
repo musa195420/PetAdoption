@@ -8,6 +8,6 @@ router.post("/id", checkToken, getById); // Changed to POST for find
 router.patch("/", checkToken, update); // Update route handles via body now
 router.delete("/", checkToken, deleteDisease); // Delete route handles via body now
 router.post("/bulk", checkToken, bulk);
-router.get("/animal/id", checkToken, getByAnimalId); // For getting diseases by animal ID
+router.post("/animal/", checkToken, getByAnimalId); // For getting diseases by animal ID
 
 module.exports = router;

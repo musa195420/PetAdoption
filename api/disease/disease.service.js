@@ -19,10 +19,19 @@ module.exports = {
         try {
             const { data, error } = await supabase
                 .from('disease')
-                .select('*');
-            
+                .select('disease_id, animal_id, name, description, animaltype(name)');
+    
             if (error) throw new Error(error.message);
-            return data;
+    
+            const formattedData = data.map(disease => ({
+                disease_id: disease.disease_id,
+                animal_id: disease.animal_id,
+                name: disease.name,
+                description: disease.description,
+                animal: disease.animaltype?.name || null  // Add animal name
+            }));
+    
+            return formattedData;
         } catch (err) {
             throw err;
         }

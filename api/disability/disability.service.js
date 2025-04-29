@@ -15,14 +15,26 @@ module.exports = {
     },
 
     getAllDisabilities: async () => {
-        const { data, error } = await supabase
-            .from('disability')
-            .select('*');
-
-        if (error) throw new Error(error.message);
-        return data;
+        try {
+            const { data, error } = await supabase
+                .from('disability')
+                .select('disability_id, animal_id, name, description, animaltype(name)');
+    
+            if (error) throw new Error(error.message);
+    
+            const formattedData = data.map(disability => ({
+                disability_id: disability.disability_id,
+                animal_id: disability.animal_id,
+                name: disability.name,
+                description: disability.description,
+                animal: disability.animaltype?.name || null  // Add animal name
+            }));
+    
+            return formattedData;
+        } catch (err) {
+            throw err;
+        }
     },
-
     getDisabilityById: async (disability_id) => {
         const { data, error } = await supabase
             .from('disability')

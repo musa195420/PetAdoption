@@ -16,7 +16,7 @@ module.exports = {
   getUserById: async (id) => {
     const { data: user, error } = await supabase
       .from('users')
-      .select('user_id, email, phone_number, role, device_id, created_at')
+      .select('user_id, email, phone_number, role, device_id, created_at,profile_image')
       .eq('user_id', id)
       .single();
 

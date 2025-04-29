@@ -8,7 +8,7 @@ router.post("/upload-image", checkToken, upload.single('image'), uploadPetImage)
 router.post("/", checkToken, addPetValidation, createNewPet);
 router.get("/", checkToken, fetchAllPets);
 router.get("/email", checkToken, fetchAllPetsWithEmail);
-router.get("/id/", checkToken, fetchPetById);
+router.post("/id/", checkToken, fetchPetById);
 router.delete("/", checkToken, deletePetById);
 router.post("/donor/", checkToken, fetchPetsByDonorId);
 router.patch("/update", updatePetById);
