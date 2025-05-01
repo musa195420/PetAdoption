@@ -43,64 +43,38 @@ module.exports = {
   },
   getAllPetsWithUserEmail: async () => {
     try {
-      // Step 1: Fetch all pets with joined animal and breed details
-      const { data: pets, error: petError } = await supabase
-        .from("pet")
-        .select(`
-          pet_id,
-          donor_id,
-          name,
-          age,
-          gender,
-          description,
-          is_approved,
-          rejection_reason,
-          is_live,
-          created_at,
-          image,
-          breed_id,
-          animaltype:animal_id!inner(animal_id, name),
-          breed:breed_id!inner(name)
-        `);
-  
-      if (petError) throw petError;
-  
-      // Step 2: Fetch all users with user_id and email
-      const { data: users, error: userError } = await supabase
-        .from("users")
-        .select("user_id, email");
-  
-      if (userError) throw userError;
-  
-      // Step 3: Merge user email into pets
-      const petsWithDetails = pets.map(pet => {
-        const user = users.find(u => u.user_id === pet.donor_id);
-        return {
-          pet_id: pet.pet_id,
-          donor_id: pet.donor_id,
-          name: pet.name,
-          age: pet.age,
-          gender: pet.gender,
-          description: pet.description,
-          is_approved: pet.is_approved,
-          rejection_reason: pet.rejection_reason,
-          is_live: pet.is_live,
-          created_at: pet.created_at,
-          image: pet.image,
-          breed_id: pet.breed_id,
-          animal_id: pet.animaltype.animal_id,
-          animal: pet.animaltype.name,
-          breed: pet.breed.name,
-          user_email: user ? user.email : null
-        };
-      });
-  
+      const { data: pets, error } = await supabase
+  .from("pets_with_donor_details")
+  .select("*");
+
+if (error) throw error;
+
+const petsWithDetails = pets.map(pet => ({
+  pet_id: pet.pet_id,
+  donor_id: pet.donor_id,
+  name: pet.name,
+  age: pet.age,
+  gender: pet.gender,
+  description: pet.description,
+  is_approved: pet.is_approved,
+  rejection_reason: pet.rejection_reason,
+  is_live: pet.is_live,
+  created_at: pet.created_at,
+  image: pet.image,
+  breed_id: pet.breed_id,
+  animal_id: pet.animal_id,
+  animal: pet.animal_name,
+  breed: pet.breed_name,
+  user_email: pet.user_email,
+  location: pet.donor_location
+}));
       return petsWithDetails;
     } catch (err) {
-      throw new Error("Failed to fetch pets with emails: " + err.message);
+      throw new Error("Failed to fetch pets with emails and location: " + err.message);
     }
-  }
-  ,
+  },
+  
+  
   
 
   getPetById: async (id) => {
