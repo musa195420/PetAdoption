@@ -1,0 +1,3337 @@
+{
+	"info": {
+		"_postman_id": "f57f66c1-09b1-4279-b092-d260dc0fe517",
+		"name": "PetAdoption",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33464692"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "AdduserImg",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "firstName",
+									"value": "Hammad",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "Baig",
+									"type": "text"
+								},
+								{
+									"key": "gender",
+									"value": "f",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "hammad@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Connects@360",
+									"type": "text"
+								},
+								{
+									"key": "number",
+									"value": "456546546546",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/E:/Zilon Projects/NodewithSql/uploads/Screenshot 2025-04-06 133945.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/users/image",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Adduser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"jimistar7@gmail.com\",\r\n  \"phone_number\": \"03348898890\",\r\n  \"role\": \"Donor\",\r\n  \"password\": \"Connect@360\",\r\n  \"device_id\": \"38696786735\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/users/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AuthToken",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"email\": \"ali@gmail.com\",\r\n  \"password\": \"Connect@360\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/users/login",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RefreshToken",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"RefreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJhNTE3ZTVlLTQxMDYtNGMxNS05NGM5LTUxMjMwMTJlNWE5ZiIsImVtYWlsIjoiYWhtZWRAZ21haWwuY29tIiwicm9sZSI6IkRvbm9yIiwiaWF0IjoxNzQ0ODA4NjAzfQ.qKlPBkyEnX4Ayq7-cwIkEKXiPZmAjn9BsRSyXXAPA_A\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/users/token",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUsers",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\":\"Musa\",\r\n    \"last_name\":\"Muhammad\",\r\n    \"gender\":\"male\",\r\n    \"email\":\"test@gmail.com\",\r\n    \"password\":\"test123\",\r\n    \"number\":7978073704\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/users/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSpecificUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\":\"2a517e5e-4106-4c15-94c9-5123012e5a9f\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/users/id/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetProfileByUserId",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\":\"ae785091-fae9-4611-98f3-dab99f10d163\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/users/id/profile",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"id",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSpecificUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"umair@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/users/email/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"email",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"user_id\": \"865dfcad-1ee9-4e84-b96a-83d2fc855362\",\r\n        \r\n        \"device_id\":\"567567567565757\"\r\n        \r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/users/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\":\"5e9db221-0485-4f50-963a-8dbcdb6c1bb8\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/users",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Adopter",
+			"item": [
+				{
+					"name": "DeleteAdoptor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n            \"user_id\": \"eda54c5f-3ca1-4047-a15e-e69a4a417c35\"\r\n            \r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/adopter",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"adopter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddAdopter",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"adopter_id\": \"2a517e5e-4106-4c15-94c9-5123012e5a9f\",\r\n  \"name\": \"Ahmed\",\r\n  \"location\": \"Rawalpindi\",\r\n  \"is_active\":true\r\n }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/adopter",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"adopter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Adopters",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\":\"Musa\",\r\n    \"last_name\":\"Muhammad\",\r\n    \"gender\":\"male\",\r\n    \"email\":\"test@gmail.com\",\r\n    \"password\":\"test123\",\r\n    \"number\":7978073704\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/adopter/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"adopter",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Adopters By Id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"adopter_id\": \"2a517e5e-4106-4c15-94c9-5123012e5a9f\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/adopter/id/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"adopter",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateAdopter",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"adopter_id\":\"2a517e5e-4106-4c15-94c9-5123012e5a9f\",\"name\":\"Ahmed\",\"location\":\"Rawalpindi,Islamabad\",\"is_active\":true}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/adopter/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"adopter",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Donor",
+			"item": [
+				{
+					"name": "AddDonor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"donor_id\": \"ae785091-fae9-4611-98f3-dab99f10d163\",\r\n  \"name\": \"Ali\",\r\n  \"location\": \"Lahore\",\r\n  \"is_active\":true\r\n }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/donor",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"donor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetDonor",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\":\"Musa\",\r\n    \"last_name\":\"Muhammad\",\r\n    \"gender\":\"male\",\r\n    \"email\":\"test@gmail.com\",\r\n    \"password\":\"test123\",\r\n    \"number\":7978073704\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/donor/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"donor",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateDonor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n            \"donor_id\": \"2a517e5e-4106-4c15-94c9-5123012e5a9f\",\r\n            \"name\": \"Ahmad\"\r\n            \r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/donor/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"donor",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteDonor",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n            \"donor_id\": \"2a517e5e-4106-4c15-94c9-5123012e5a9f\",\r\n            \"name\": \"Ahmad\"\r\n            \r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/donor/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"donor",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSpecificDonor",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"donor_id\": \"2a517e5e-4106-4c15-94c9-5123012e5a9f\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/donor/id/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"donor",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pets",
+			"item": [
+				{
+					"name": "AddPet",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"donor_id\": \"2a517e5e-4106-4c15-94c9-5123012e5a9f\",\r\n            \"name\": \"Lukky\",\r\n            \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\",\r\n            \"breed_id\": \"9801122f-329c-442d-823e-2218e5f18f40\",\r\n            \"age\": 10,\r\n            \"gender\": \"Male\",\r\n            \"description\": \"A happy And Freindly Dogg\",\r\n            \"is_approved\": \"Pending\",\r\n            \"rejection_reason\": null,\r\n            \"is_live\": true\r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/pet",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"pet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPet",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\":\"Musa\",\r\n    \"last_name\":\"Muhammad\",\r\n    \"gender\":\"male\",\r\n    \"email\":\"test@gmail.com\",\r\n    \"password\":\"test123\",\r\n    \"number\":7978073704\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/pet",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"pet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPetsAnd Emails",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\":\"Musa\",\r\n    \"last_name\":\"Muhammad\",\r\n    \"gender\":\"male\",\r\n    \"email\":\"test@gmail.com\",\r\n    \"password\":\"test123\",\r\n    \"number\":7978073704\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/pet/email",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"pet",
+								"email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatePet",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"pet_id\": \"5ec837ee-10ec-40bd-a2d6-8d1ca8dd88aa\",\r\n            \"donor_id\": \"2a517e5e-4106-4c15-94c9-5123012e5a9f\",\r\n            \"name\": \"Lukky\",\r\n            \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\",\r\n            \"breed_id\": \"9801122f-329c-442d-823e-2218e5f18f40\",\r\n            \"age\": 10,\r\n            \"gender\": \"Male\",\r\n            \"description\": \"A happy And Freindly Dogg\",\r\n            \"is_approved\": \"Pending\",\r\n            \"rejection_reason\": null,\r\n            \"is_live\": true,\r\n            \"created_at\": \"2025-04-19T20:01:49.761\",\r\n            \"image\": null\r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/pet/update",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"pet",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeletePet",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n         \"pet_id\": \"7c59c650-118d-4357-8728-9570f7c61221\"\r\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/pet",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"pet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSpecificPet",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n            \"pet_id\": \"557bee19-0986-4e90-a406-a7ac4e12005f\"\r\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/pet/id/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"pet",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSpecificPetByDonoID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n            \"user_id\": \"2a517e5e-4106-4c15-94c9-5123012e5a9f\"\r\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/pet/donor/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"pet",
+								"donor",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AnimalType",
+			"item": [
+				{
+					"name": "AddAnimals",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"animals\": [\r\n   \r\n      \r\n      \"Leopard\",\r\n  \r\n   \r\n     \"Hamster\"\r\n   \r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/animal/bulk",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"animal",
+								"bulk"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddAnimal",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\":\"lion\"\r\n }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/animal",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"animal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAnimals",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/animal/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"animal",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateAnimal",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"animal_id\": \"b5dbce70-888b-49be-a938-ef1dbaad8526\",\r\n            \"name\": \"camels\"\r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/animal/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"animal",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteAnimal",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n            \"animal_id\": \"b5dbce70-888b-49be-a938-ef1dbaad8526\"\r\n           \r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/animal",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"animal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSpecificAnimal",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\r\n            \"animal_id\": \"a5e5bfb8-10dd-4c12-b2f9-eb9737a8283a\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/animal/id/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"animal",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Breed",
+			"item": [
+				{
+					"name": "AddBreeds",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"breeds\": [\r\n    {\r\n      \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\",\r\n      \"name\": \"Labrador\"\r\n    },\r\n    {\r\n      \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\",\r\n      \"name\": \"Golden Retriever\"\r\n    },\r\n    {\r\n      \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\",\r\n      \"name\": \"Persian\"\r\n    },\r\n    {\r\n      \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\",\r\n      \"name\": \"Siamese\"\r\n    },\r\n    {\r\n      \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\",\r\n      \"name\": \"Dutch\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/breed/bulk",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"breed",
+								"bulk"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddBreed",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n      \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\",\r\n      \"name\": \"Golden Retriever\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/breed/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"breed",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBreeds",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/breed/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"breed",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBreedsByAnimalId",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/breed/animal",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"breed",
+								"animal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateBreed",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"breed_id\":9,\r\n  \"name\": \"Tripple Fur \"\r\n }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/breed/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"breed",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteBreed",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n            \"breed_id\": \"a769cde8-66e0-4298-9c6b-4d5ecd84c8cc\"\r\n           \r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/breed/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"breed",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vaccination",
+			"item": [
+				{
+					"name": "AddVaccinations",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"vaccinations\": [\r\n    {  \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\", \"name\": \"Rabies\", \"description\": \"Rabies vaccine\" },\r\n    {  \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\", \"name\": \"Parvovirus\", \"description\": \"Parvo vaccine\" }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/vaccination/bulk",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"vaccination",
+								"bulk"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddVacciantion",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\", \"name\": \"Xenforo\", \"description\": \"Legs Disease\" }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/vaccination",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"vaccination"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetVacciantions",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\":\"Musa\",\r\n    \"last_name\":\"Muhammad\",\r\n    \"gender\":\"male\",\r\n    \"email\":\"test@gmail.com\",\r\n    \"password\":\"test123\",\r\n    \"number\":7978073704\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/vaccination",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"vaccination"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateVaccine",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"vaccine_id\":6,\r\n  \"animal_id\": 2\r\n }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/vaccination",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"vaccination"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteVaccine",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\r\n            \"vaccine_id\": \"1ad97283-4f5b-4212-a616-bf984dfbdd84\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/vaccination/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"vaccination",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Disease",
+			"item": [
+				{
+					"name": "AddDiseases",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"diseases\": [\r\n        {\r\n             \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\",\r\n            \"name\": \"Rabies\",\r\n            \"description\": \"A viral disease that causes inflammation of the brain.\"\r\n        },\r\n        {\r\n            \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\",\r\n            \"name\": \"Parvovirus\",\r\n            \"description\": \"A highly contagious viral infection that affects dogs.\"\r\n        },\r\n        {\r\n             \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\",\r\n            \"name\": \"Leptospirosis\",\r\n            \"description\": \"A bacterial infection that can cause liver and kidney damage.\"\r\n        },\r\n        {\r\n             \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\",\r\n            \"name\": \"Distemper\",\r\n            \"description\": \"A viral disease that affects the respiratory, gastrointestinal, and nervous systems.\"\r\n        },\r\n        {\r\n           \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\",\r\n            \"name\": \"Feline Leukemia\",\r\n            \"description\": \"A viral infection in cats that suppresses the immune system.\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/disease/bulk",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"disease",
+								"bulk"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddDisease",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n           \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\",\r\n            \"name\": \"Felicita Leukemia\",\r\n            \"description\": \"A viral infection That cause Love\"\r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/disease",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"disease"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetDisease",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\":\"Musa\",\r\n    \"last_name\":\"Muhammad\",\r\n    \"gender\":\"male\",\r\n    \"email\":\"test@gmail.com\",\r\n    \"password\":\"test123\",\r\n    \"number\":7978073704\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/disease",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"disease"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetDiseaseByAnimal",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"animal_id\": \"31cb3a8d-0ad3-40e8-8a9c-83f61bf887b5\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/disease/animal/id",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"disease",
+								"animal",
+								"id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateDisease",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n        \"disease_id\": 7,\r\n     \r\n      \"description\": \"Contagious but not cancer\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/disease",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"disease"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteDisease",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n      \"disease_id\": \"bec41eef-ed0f-4607-b18a-b9d1756b4776\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/disease",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"disease"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Disability",
+			"item": [
+				{
+					"name": "AddDisability",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"disabilities\": [\r\n    {\r\n      \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\",\r\n      \"name\": \"Blindness\",\r\n      \"description\": \"The animal is blind in one eye\"\r\n    },\r\n    {\r\n      \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\",\r\n      \"name\": \"Lameness\",\r\n      \"description\": \"The animal has a limp on the right leg\"\r\n    },\r\n    {\r\n      \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\",\r\n      \"name\": \"Deafness\",\r\n      \"description\": \"The animal has partial hearing loss\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/disability/bulk",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"disability",
+								"bulk"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddDisability",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n      \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\",\r\n      \"name\": \"Tiredness\",\r\n      \"description\": \"The animal has partial Tiredness\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/disability",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"disability"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetDisability",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/disability",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"disability"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetDisabiltyByAnimal",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \"animal_id\": \"cc6d414c-ade9-4723-b2e7-9a19e7966cb3\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/disability/animal",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"disability",
+								"animal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatedisability",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n            \"disability_id\": 5,\r\n            \"animal_id\": 3\r\n          \r\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/disability",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"disability"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteDisability",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \r\n            \"disability_id\": \"3a0c6c9d-fd99-4471-8e15-fefdf17ffb6d\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/disability",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"disability"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "HealthInfo",
+			"item": [
+				{
+					"name": "AddHealthInfo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " { \"pet_id\": \"6f0a1296-ac3d-4909-8cc1-0036e342102f\", \"vaccination_id\": \"934b053e-b044-4ea5-9daa-f0bdf6501712\", \"disease_id\": \"1c908011-9aee-40de-a8b5-af4f32c7fe02\",\"disability_id\":\"3d6f1ccc-1338-4791-8f9f-f6a09a19a269\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/health",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetHealthInfo",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\":\"Musa\",\r\n    \"last_name\":\"Muhammad\",\r\n    \"gender\":\"male\",\r\n    \"email\":\"test@gmail.com\",\r\n    \"password\":\"test123\",\r\n    \"number\":7978073704\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/health/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"health",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GethealthByPetId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"pet_id\": \"6f0a1296-ac3d-4909-8cc1-0036e342102f\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/health/pet",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"health",
+								"pet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatehealth",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " { \"pet_id\": 2,\"disability_id\":1 }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/health",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteHealth",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"health_id\": \"54d37587-eecf-43fe-9482-5b29d79aeaf9\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/health",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Message",
+			"item": [
+				{
+					"name": "AddMessageInfo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " { \"sender_id\": \"50b6522f-9c54-4635-85e8-247bd1b9d56c\", \"receiver_id\": \"2a517e5e-4106-4c15-94c9-5123012e5a9f\", \"content\": \"Hell Imposter\" }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/message",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"message"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMessageByuserID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\":\"2a517e5e-4106-4c15-94c9-5123012e5a9f\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/message/user/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"message",
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBySenderAndReceiverid",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"receiver_id\": \"50b6522f-9c54-4635-85e8-247bd1b9d56c\",\r\n            \"sender_id\": \"2a517e5e-4106-4c15-94c9-5123012e5a9f\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/message/between/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"message",
+								"between",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateMessage",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n             \"message_id\": \"4fb90836-0d18-4954-99fb-746112ed2659\",\r\n\r\n            \"content\": \"How Good you Read that\",\r\n            \"timestamp\": \"2025-04-11T13:01:49.000Z\"\r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/message",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"message"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteMessage",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n      \"message_id\": \"4fb90836-0d18-4954-99fb-746112ed2659\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/message",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"message"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Favourite",
+			"item": [
+				{
+					"name": "AddFavourite",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " { \"user_id\": \"2a517e5e-4106-4c15-94c9-5123012e5a9f\", \"pet_id\": \"6f0a1296-ac3d-4909-8cc1-0036e342102f\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/favourite",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"favourite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetFavourites",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/favourite",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"favourite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getFavoriteByfavId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n     \"fav_id\": \"a8e6866d-55ca-498b-8546-538778a9c37a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/favourite/id",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"favourite",
+								"id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getByuserIdFavourite",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n        \"user_id\": \"2a517e5e-4106-4c15-94c9-5123012e5a9f\"\r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/favourite/user/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"favourite",
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteFavourite",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fav_id\": \"a8e6866d-55ca-498b-8546-538778a9c37a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/favourite/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"favourite",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Meetup",
+			"item": [
+				{
+					"name": "AddMeetup",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " { \r\n    \"pet_id\": \"6f0a1296-ac3d-4909-8cc1-0036e342102f\",\r\n  \"donor_id\": \"2a517e5e-4106-4c15-94c9-5123012e5a9f\", \r\n \"adopter_id\": \"2a517e5e-4106-4c15-94c9-5123012e5a9f\",\r\n  \"location\": \"Near Boullevard Main  Street\",\r\n  \"time\":\"2025-12-1 12:23:60\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/meetup",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"meetup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateMeetup",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n            \"meetup_id\": \"55247cf2-0954-47ed-8bbe-ee116a69caf4\",\r\n            \"pet_id\": \"6f0a1296-ac3d-4909-8cc1-0036e342102f\",\r\n            \"donor_id\": \"2a517e5e-4106-4c15-94c9-5123012e5a9f\",\r\n            \"adopter_id\": \"2a517e5e-4106-4c15-94c9-5123012e5a9f\",\r\n            \"location\": \"Near Jamaia Mian  Street\",\r\n            \"time\": \"2025-12-01T12:24:00\",\r\n            \"is_accepted_by_donor\": false,\r\n            \"is_accepted_by_adopter\": false,\r\n            \"created_at\": \"2025-04-12T21:06:34.111299\"\r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/meetup",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"meetup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMeetupByID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n            \"meetup_id\": \"c8978f0b-4402-4e8a-a67b-1429063d19b7\"\r\n          \r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/meetup/id/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"meetup",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getMeetups",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\":\"Musa\",\r\n    \"last_name\":\"Muhammad\",\r\n    \"gender\":\"male\",\r\n    \"email\":\"test@gmail.com\",\r\n    \"password\":\"test123\",\r\n    \"number\":7978073704\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/meetup",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"meetup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getMeetupByuserId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n           \r\n            \"user_id\": \"2a517e5e-4106-4c15-94c9-5123012e5a9f\"\r\n          \r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/meetup/user/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"meetup",
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getMeetupBypetId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n            \r\n            \"pet_id\": \"6f0a1296-ac3d-4909-8cc1-0036e342102f\"\r\n          \r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/meetup/pet",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"meetup",
+								"pet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteMeetup",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n            \"meetup_id\": \"55247cf2-0954-47ed-8bbe-ee116a69caf4\"\r\n           \r\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/meetup/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"meetup",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SecureMeetup",
+			"item": [
+				{
+					"name": "AddSecureMeetup",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"meetup_id\": \"c8978f0b-4402-4e8a-a67b-1429063d19b7\",\r\n  \"proof_pic_url\": \"https://images.pexels.com/photos/35537/child-children-girl-happy.jpg?auto=compress&cs=tinysrgb&w=600\",\r\n  \"adopter_id_front_url\": \"https://images.pexels.com/photos/35537/child-children-girl-happy.jpg?auto=compress&cs=tinysrgb&w=600\",\r\n  \"adopter_id_back_url\": \"https://images.pexels.com/photos/35537/child-children-girl-happy.jpg?auto=compress&cs=tinysrgb&w=600\",\r\n  \"phone_number\": \"032452342234234\",\r\n  \"current_address\": \"Near Boullevard Main Street\",\r\n  \"time\": \"2025-12-01 12:23:59\",\r\n  \"submitted_by\": \"Adopter\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/secureMeetup",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"secureMeetup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateMeetup",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n\"secure_meetup_id\": \"71daeca7-248e-48a7-aee8-1aa1535b75d1\",\r\n\r\n\"meetup_id\": \"c8978f0b-4402-4e8a-a67b-1429063d19b7\",\r\n\r\n\"phone_number\": \"032452342234234\",\r\n\r\n\"current_address\": \"Near Boullevard Main Street\",\r\n\r\n\"approval\": \"Valid\",\r\n\r\n\"rejection_reason\": \"PicreNotClear\"\r\n \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/secureMeetup",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"secureMeetup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSecureMeetups",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/secureMeetup/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"secureMeetup",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSecureMeetupsById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"secure_meetup_id\": \"c8d83e5c-c22b-430d-834f-dde431abba47\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/secureMeetup/id/",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"secureMeetup",
+								"id",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteMeetup",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{acessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"secure_meetup_id\": \"c8d83e5c-c22b-430d-834f-dde431abba47\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/api/secureMeetup",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"api",
+								"secureMeetup"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "acessToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiZW1haWwiOiJhcmpAZ21haWwuY29tIiwiaWF0IjoxNzQ0MTE2MTAyLCJleHAiOjE3NDQxMTcwMDJ9.Sawa5K4zH3cB6aqdPUsKynu2MY1wERG5g-jWyyDF8aA",
+			"type": "string"
+		},
+		{
+			"key": "depUrl",
+			"value": "https://nodewithsql-production.up.railway.app",
+			"type": "string"
+		}
+	]
+}

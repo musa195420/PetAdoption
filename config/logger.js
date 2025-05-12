@@ -10,7 +10,6 @@ const loggerTransports = [
   }),
 ];
 
-console.log('MONGODB_URL:', process.env.MONGODB_URL);
 
 // Try to add MongoDB transport only if the env var is defined
 if (process.env.MONGODB_URL) {
