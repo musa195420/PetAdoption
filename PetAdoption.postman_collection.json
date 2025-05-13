@@ -144,7 +144,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"RefreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjJhNTE3ZTVlLTQxMDYtNGMxNS05NGM5LTUxMjMwMTJlNWE5ZiIsImVtYWlsIjoiYWhtZWRAZ21haWwuY29tIiwicm9sZSI6IkRvbm9yIiwiaWF0IjoxNzQ0ODA4NjAzfQ.qKlPBkyEnX4Ayq7-cwIkEKXiPZmAjn9BsRSyXXAPA_A\"\r\n}\r\n",
+							"raw": "{\r\n  \"RefreshToken\": \"XXXXXXXXXXXXXXXXX",
 							"options": {
 								"raw": {
 									"language": "json"
