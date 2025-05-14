@@ -68,15 +68,17 @@ Input validation is handled with schemas located in the `validation/` directory 
 
 
    add .env file in root
-APP_PORT=3020
-SUPABASE_SERVICE_ROLE_KEY= Supabase Service Roll Key
-SUPABASE_URL=Supabase Url
-SUPABASE_KEY= Supbase Key
-MYSQL_DB=petadoption
-ACCESS_TOKEN_SECRET=" 676ea5e59ec5002fc446b3bbc1681aec1a6f12e835fa101b55b8d381249f8f75"  // Any Random
-REFRESH_TOKEN_SECRET=" 7d628b52b4fbcb60f3d2fd3fc844b866f96478ce3d168ec55f19817bd41da3d6" // Any Random
-MONGODB_URL=Mongodb Url For store log file crash Analytics 
-TOKEN_TIME=3
+| #Key                       | #Description                                | #Example                                 |
+|----------------------------|---------------------------------------------|------------------------------------------|
+| `APP_PORT`                 | Port on which the backend runs              | `3020`                                   |
+| `SUPABASE_SERVICE_ROLE_KEY`| Supabase service role key (keep secret)     | `your-service-role-key`                  |
+| `SUPABASE_URL`             | Supabase project URL                        | `https://your-project.supabase.co`       |
+| `SUPABASE_KEY`             | Supabase anon/public key                    | `your-supabase-anon-key`                 |
+| `MYSQL_DB`                 | MySQL database name                         | `petadoption`                            |
+| `ACCESS_TOKEN_SECRET`      | Secret key for access token JWT             | `your-access-token-secret`               |
+| `REFRESH_TOKEN_SECRET`     | Secret key for refresh token JWT            | `your-refresh-token-secret`              |
+| `MONGODB_URL`              | MongoDB URL for storing crash logs          | `mongodb+srv://user:pass@host/db`        |
+| `TOKEN_TIME`               | Token expiry time in hours                  | `3`                                      |
 
 
 
