@@ -1,127 +1,89 @@
-"# PetAdoption" 
-All Sql queries
--- USERS TABLE
-CREATE TABLE Users (
-  user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  email VARCHAR(255) UNIQUE NOT NULL,
-  phone_number VARCHAR(20) NOT NULL,
-  password TEXT NOT NULL,
-  role VARCHAR(10) CHECK (role IN ('Admin', 'Adopter', 'Donor')) NOT NULL,
-  device_id VARCHAR(255),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+[PetAdoption.postman_collection.json](https://github.com/user-attachments/files/20177322/PetAdoption.postman_collection.json)# 🐾 Pet Adoption App Backend
 
--- PROFILES
-CREATE TABLE DonorProfile (
-  donor_id UUID PRIMARY KEY REFERENCES Users(user_id),
-  name VARCHAR(255) NOT NULL,
-  location VARCHAR(255),
-  is_active BOOLEAN DEFAULT TRUE
-);
+This is the backend service for the **Pet Adoption** platform built with **Next.js**, **Express.js**, **PostgreSQL**, and **Supabase**. It is designed to manage the core operations for pet donors, adopters, pets, health records, secure meetups, messaging, and more.
 
-CREATE TABLE AdopterProfile (
-  adopter_id UUID PRIMARY KEY REFERENCES Users(user_id),
-  name VARCHAR(255) NOT NULL,
-  location VARCHAR(255),
-  is_active BOOLEAN DEFAULT TRUE
-);
+---
 
--- ANIMAL CLASSIFICATION
-CREATE TABLE AnimalType (
-  animal_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  name VARCHAR(100) NOT NULL
-);
+## ◉ Features
 
-CREATE TABLE Breed (
-  breed_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  animal_id UUID REFERENCES AnimalType(animal_id),
-  name VARCHAR(100) NOT NULL
-);
+- ⦿ **JWT Authentication**
+  - Secure login with JWT
+  - ⦿ Refresh token flow using the previous token
 
--- PET TABLE
-CREATE TABLE Pet (
-  pet_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  donor_id UUID REFERENCES DonorProfile(donor_id),
-  name VARCHAR(255) NOT NULL,
-  animal_type UUID REFERENCES AnimalType(animal_id),
-  breed_id UUID REFERENCES Breed(breed_id),
-  age INTEGER,
-  gender VARCHAR(10),
-  description TEXT,
-  is_approved VARCHAR(10) CHECK (is_approved IN ('Pending', 'Approved', 'Rejected')) DEFAULT 'Pending',
-  rejection_reason TEXT,
-  is_live BOOLEAN DEFAULT FALSE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+- ⦿ **Image Upload**
+  - Image upload using `multer`
+  - Direct storage to Supabase bucket
 
--- HEALTH MODULE
-CREATE TABLE Vaccination (
-  vaccine_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  animal_id UUID REFERENCES AnimalType(animal_id),
-  name VARCHAR(100) NOT NULL,
-  description TEXT
-);
+- ⦿ **MVC Architecture**
+  - Clear separation between Controllers, Services, and Routers
 
-CREATE TABLE Disease (
-  disease_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  animal_id UUID REFERENCES AnimalType(animal_id),
-  name VARCHAR(100) NOT NULL,
-  description TEXT
-);
+- ⦿ **Supabase Integration**
+  - Used for PostgreSQL DB and media storage
 
-CREATE TABLE Disability (
-  disability_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  animal_id UUID REFERENCES AnimalType(animal_id),
-  name VARCHAR(100) NOT NULL,
-  description TEXT
-);
+---
 
-CREATE TABLE HealthInfo (
-  health_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  pet_id UUID REFERENCES Pet(pet_id),
-  vaccination_id UUID REFERENCES Vaccination(vaccine_id),
-  disease_id UUID REFERENCES Disease(disease_id),
-  disability_id UUID REFERENCES Disability(disability_id)
-);
+## ◎ Database Schema
 
--- MESSAGING
-CREATE TABLE Message (
-  message_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  sender_id UUID REFERENCES Users(user_id),
-  receiver_id UUID REFERENCES Users(user_id),
-  content TEXT NOT NULL,
-  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+The project is backed by a relational PostgreSQL schema managed in Supabase. Key entities include:
 
--- FAVORITES
-CREATE TABLE Favorites (
-  fav_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES Users(user_id),
-  pet_id UUID REFERENCES Pet(pet_id),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+- ◎ `users`
+- ◎ `pet`, `breed`, `animaltype`
+- ◎ `donorprofile`, `adopterprofile`
+- ◎ `favorites`, `message`, `meetuprequest`, `securemeetup`
+- ◎ `healthinfo`, `disease`, `disability`, `vaccination`
 
--- MEETUPS
-CREATE TABLE MeetupRequest (
-  meetup_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  pet_id UUID REFERENCES Pet(pet_id),
-  donor_id UUID REFERENCES DonorProfile(donor_id),
-  adopter_id UUID REFERENCES AdopterProfile(adopter_id),
-  location VARCHAR(255),
-  time TIMESTAMP,
-  is_accepted_by_donor BOOLEAN DEFAULT FALSE,
-  is_accepted_by_adopter BOOLEAN DEFAULT FALSE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+🗂️ Relational structure example:  
+![supabase-schema-oddfvsiltlgqlpyfwkmi (3)](https://github.com/user-attachments/assets/c944d406-ba46-4338-bd69-a97b57fb06f2)
 
-CREATE TABLE SecureMeetup (
-  secure_meetup_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  meetup_id UUID REFERENCES MeetupRequest(meetup_id),
-  proof_pic_url TEXT,
-  adopter_id_front_url TEXT,
-  adopter_id_back_url TEXT,
-  phone_number VARCHAR(20),
-  current_address TEXT,
-  time TIMESTAMP,
-  submitted_by VARCHAR(10) CHECK (submitted_by IN ('Donor', 'Adopter'))
-);
+
+---
+---
+
+## ⦿ API Modules
+
+Each module under `api/` follows an MVC pattern:
+- `*.controller.js` → Handles HTTP requests and responses
+- `*.service.js` → Handles business logic and Supabase interactions
+- `*.router.js` → Defines Express.js routes
+
+---
+
+## ⦿ Validation
+
+Input validation is handled with schemas located in the `validation/` directory for:
+- Adopter
+- Donor
+- Pet
+- User
+
+---
+
+## ◎ Setup Instructions
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/musa195420/PetAdoption
+   cd PetAdoption
+
+
+
+   add .env file in root
+| #Key                       | #Description                                | #Example                                 |
+|----------------------------|---------------------------------------------|------------------------------------------|
+| `APP_PORT`                 | Port on which the backend runs              | `3020`                                   |
+| `SUPABASE_SERVICE_ROLE_KEY`| Supabase service role key (keep secret)     | `your-service-role-key`                  |
+| `SUPABASE_URL`             | Supabase project URL                        | `https://your-project.supabase.co`       |
+| `SUPABASE_KEY`             | Supabase anon/public key                    | `your-supabase-anon-key`                 |
+| `MYSQL_DB`                 | MySQL database name                         | `petadoption`                            |
+| `ACCESS_TOKEN_SECRET`      | Secret key for access token JWT             | `your-access-token-secret`               |
+| `REFRESH_TOKEN_SECRET`     | Secret key for refresh token JWT            | `your-refresh-token-secret`              |
+| `MONGODB_URL`              | MongoDB URL for storing crash logs          | `mongodb+srv://user:pass@host/db`        |
+| `TOKEN_TIME`               | Token expiry time in hours                  | `3`                                      |
+
+
+
+## Postman Request All 74 Implemented
+Find in git repo Name Pet Adoption Postman.txt
+
+
+
