@@ -104,16 +104,43 @@ module.exports = {
   },
 
   deleteUser: async (data) => {
-    const { user_id } = data;
-    const { data: deletedUser, error } = await supabase
-      .from('users')
-      .delete()
-      .eq('user_id', user_id)
-      .select();
+  const { user_id } = data;
 
-    if (error) throw new Error(error.message);
-    return deletedUser;
-  },
+  // Step 1: Get profile image URL
+  const { data: user, error: fetchError } = await supabase
+    .from('users')
+    .select('profile_image')
+    .eq('user_id', user_id)
+    .single();
+
+  if (fetchError) {
+    console.error("Failed to fetch user before delete:", fetchError);
+    throw new Error("Could not fetch user data");
+  }
+
+  // Step 2: Delete image from storage
+  if (user?.profile_image) {
+    const imagePath = user.profile_image.split('/userimage/')[1];
+    if (imagePath) {
+      const { error: deleteError } = await supabase.storage
+        .from('userimage')
+        .remove([imagePath]);
+      if (deleteError) {
+        console.warn("Image deletion failed:", deleteError.message);
+      }
+    }
+  }
+
+  // Step 3: Delete user from DB
+  const { data: deletedUser, error } = await supabase
+    .from('users')
+    .delete()
+    .eq('user_id', user_id)
+    .select();
+
+  if (error) throw new Error(error.message);
+  return deletedUser;
+},
 
   getUserByEmail: async (email) => {
     const { data: user, error } = await supabase
@@ -127,37 +154,64 @@ module.exports = {
     return user;
   },
   uploadUserImageService: async (file, userId) => {
-    const fileName = `${userId}/${Date.now()}_${file.originalname}`;
+  // Step 1: Get the current image URL from DB
+  const { data: user, error: fetchError } = await supabase
+    .from('users')
+    .select('profile_image')
+    .eq('user_id', userId)
+    .single();
 
-    const { data, error } = await supabase.storage
-      .from('userimage')
-      .upload(fileName, file.buffer, {
-        contentType: file.mimetype,
-        upsert: true,
-      });
+  if (fetchError) {
+    console.error("Error fetching current image:", fetchError);
+    throw new Error("Failed to fetch current image");
+  }
 
-    if (error) {
-      console.error("Supabase upload error:", error);
-      throw new Error("Supabase upload failed");
+  // Step 2: Delete the previous image from storage
+  if (user?.profile_image) {
+    const imagePath = user.profile_image.split('/userimage/')[1]; // extract path after bucket name
+    if (imagePath) {
+      const { error: deleteError } = await supabase.storage
+        .from('userimage')
+        .remove([imagePath]);
+      if (deleteError) {
+        console.warn("Previous image deletion failed:", deleteError.message);
+        // Optional: don't throw here if you want to allow overwrite
+      }
     }
+  }
 
-    const { data: publicUrlData } = supabase
-      .storage
-      .from('userimage')
-      .getPublicUrl(fileName);
+  // Step 3: Upload new image
+  const fileName = `${userId}/${Date.now()}_${file.originalname}`;
+  const { data, error } = await supabase.storage
+    .from('userimage')
+    .upload(fileName, file.buffer, {
+      contentType: file.mimetype,
+      upsert: true,
+    });
 
-    const imageUrl = publicUrlData.publicUrl;
+  if (error) {
+    console.error("Supabase upload error:", error);
+    throw new Error("Supabase upload failed");
+  }
 
-    const { error: dbError } = await supabase
-      .from('users')
-      .update({ profile_image: imageUrl })
-      .eq('user_id', userId);
+  const { data: publicUrlData } = supabase
+    .storage
+    .from('userimage')
+    .getPublicUrl(fileName);
 
-    if (dbError) {
-      console.error("Supabase DB update error:", dbError);
-      throw new Error("Failed to update user image URL");
-    }
+  const imageUrl = publicUrlData.publicUrl;
 
-    return imageUrl;
-  },
+  const { error: dbError } = await supabase
+    .from('users')
+    .update({ profile_image: imageUrl })
+    .eq('user_id', userId);
+
+  if (dbError) {
+    console.error("Supabase DB update error:", dbError);
+    throw new Error("Failed to update user image URL");
+  }
+
+  return imageUrl;
+},
+
 };

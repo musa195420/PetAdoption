@@ -50,22 +50,36 @@ module.exports = {
   },
 
   updateDonor: async (data) => {
-    try {
-      const { error, data: result } = await supabase
-        .from("donorprofile")
-        .update({
-          name: data.name,
-          location: data.location,
-          is_active: data.is_active,
-        })
-        .eq("donor_id", data.donor_id);
+  try {
+    const updateData = {};
 
-      if (error) throw error;
-      return result;
-    } catch (err) {
-      throw new Error(err.message);
+    if (data.name !== null && data.name !== undefined) {
+      updateData.name = data.name;
     }
-  },
+
+    if (data.location !== null && data.location !== undefined) {
+      updateData.location = data.location;
+    }
+
+    if (data.is_active !== null && data.is_active !== undefined) {
+      updateData.is_active = data.is_active;
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      throw new Error("No valid fields to update");
+    }
+
+    const { error, data: result } = await supabase
+      .from("donorprofile")
+      .update(updateData)
+      .eq("donor_id", data.donor_id);
+
+    if (error) throw error;
+    return result;
+  } catch (err) {
+    throw new Error(err.message);
+  }
+},
 
   deleteDonor: async (id) => {
     try {
