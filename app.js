@@ -1,11 +1,26 @@
-// app.js
 const express = require('express');
 require('dotenv').config();
 const app = express();
 const logger = require('./config/logger');
 
-// Supabase client (optional to test connection here)
+// Create HTTP server & Socket.IO
+const http = require('http');
+const server = http.createServer(app);
+
+// ✅ FIX: Correct import and instantiation
+const { Server } = require('socket.io');
+const io = new Server(server, {
+  cors: {
+    origin: '*'
+  }
+});
+
+// Supabase client
 const supabase = require('./config/database');
+
+// Load Socket logic
+const { initSocket } = require('./socket');
+initSocket(io);
 
 // Routers
 const routes = {
@@ -25,10 +40,10 @@ const routes = {
   secureMeetups: require('./api/secureMeetup/secureMeetup.router')
 };
 
-// Middlewares
+// Middleware
 app.use(express.json());
 
-// Log every request/response asynchronously
+// Request/Response logging
 app.use((req, res, next) => {
   logger.info(`[REQUEST] ${req.method} ${req.url}`, req.body);
 
@@ -64,18 +79,17 @@ app.use('/api/users', routes.users);
 // Base API Check
 app.get('/api', async (req, res) => {
   res.json({
-    status:200,
+    status: 200,
     success: true,
     message: 'REST APIs are working.'
   });
 });
 
-// Error Handler for Uncaught Routes
+// Unmatched Route Handler
 app.use((req, res) => {
   res.status(404).json({
-    status:400,
+    status: 400,
     success: false,
-    
     message: 'Route not found'
   });
 });
@@ -83,10 +97,10 @@ app.use((req, res) => {
 // Global Error Handler
 app.use((err, req, res, next) => {
   logger.error('Unhandled error:', err);
-  res.status(500).json({ success:false,status: 500, message: 'Internal server error' });
+  res.status(500).json({ success: false, status: 500, message: 'Internal server error' });
 });
 
-// Start Server
-app.listen(process.env.APP_PORT, () => {
+// Start HTTP server
+server.listen(process.env.APP_PORT, () => {
   logger.info(`Server running on port ${process.env.APP_PORT}`);
 });
