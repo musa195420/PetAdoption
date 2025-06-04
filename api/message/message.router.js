@@ -7,14 +7,17 @@ const {
     fetchMessagesBetween,
     deleteMessage,
     updateMessage,
+    fetchMessageInfoByUserId,
+    
 } = require("./message.controller");
 
 router.post("/", checkToken, sendMessage);
 router.get("/", checkToken, fetchAllMessages);
 
 // IDs passed in body instead of params now:
-router.get("/user", checkToken, fetchMessagesByUserId);
-router.get("/between", checkToken, fetchMessagesBetween);
+router.post("/user", checkToken, fetchMessagesByUserId);
+router.post("/info", checkToken, fetchMessageInfoByUserId);
+router.post("/between", checkToken, fetchMessagesBetween);
 router.delete("/", checkToken, deleteMessage);
 router.patch("/", checkToken, updateMessage);
 

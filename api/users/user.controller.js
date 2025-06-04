@@ -5,7 +5,7 @@ const {
   updateUser,
   deleteUser,
   getUserByEmail,uploadUserImageService,
-  getProfileById
+  getProfileById,getFullUserDataById
 } = require("./user.service");
 require("dotenv").config();
 
@@ -90,6 +90,20 @@ module.exports = {
     try {
       const id = req.body.user_id;
       const user = await getUserById(id);
+
+      if (!user) {
+        return res.status(404).json({ success:false,status: 400, message: "User not found" });
+      }
+
+      return res.status(200).json({ success:true,status: 200,  data: user });
+    } catch (err) {
+      return res.status(500).json({ success:false,status: 400, message: "DB Error", error: err.message });
+    }
+  },
+  getUserFullDataById: async (req, res) => {
+    try {
+      const id = req.body.user_id;
+      const user = await getFullUserDataById(id);
 
       if (!user) {
         return res.status(404).json({ success:false,status: 400, message: "User not found" });

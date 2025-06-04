@@ -5,6 +5,7 @@ const {
     getMessagesBetweenUsers,
     updateMessage,
     deleteMessage,
+    getChatUsers
 } = require("./message.service");
 
 module.exports = {
@@ -32,6 +33,15 @@ module.exports = {
         try {
             const { user_id } = req.body;
             const result = await getMessagesByUserId(user_id);
+            res.status(200).json({ success: true, data: result, status: 200 });
+        } catch (err) {
+            res.status(500).json({ success: false, message: err.message, status: 500 });
+        }
+    },
+     fetchMessageInfoByUserId: async (req, res) => {
+        try {
+            const { user_id } = req.body;
+            const result = await getChatUsers(user_id);
             res.status(200).json({ success: true, data: result, status: 200 });
         } catch (err) {
             res.status(500).json({ success: false, message: err.message, status: 500 });

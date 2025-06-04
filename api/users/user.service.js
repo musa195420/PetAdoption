@@ -213,5 +213,72 @@ module.exports = {
 
   return imageUrl;
 },
+getFullUserDataById: async (user_id) => {
+  // Step 1: Fetch user data
+  const { data: user, error: userError } = await supabase
+    .from('users')
+    .select('user_id, email, phone_number, role, device_id, created_at, profile_image')
+    .eq('user_id', user_id)
+    .single();
 
+  if (userError || !user) {
+    throw new Error(userError?.message || 'User not found');
+  }
+
+  // Step 2: Try to fetch adopter profile
+  const { data: adopter, error: adopterError } = await supabase
+    .from('adopterprofile')
+    .select('name, location, is_active')
+    .eq('adopter_id', user_id)
+    .single();
+
+  if (adopter) {
+    return {
+      success: true,
+      status: 200,
+      data: {
+        ...user,
+        ...adopter,
+      },
+    };
+  }
+
+  if (adopterError && adopterError.code !== 'PGRST116') {
+    throw new Error(adopterError.message);
+  }
+
+  // Step 3: Try to fetch donor profile
+  const { data: donor, error: donorError } = await supabase
+    .from('donorprofile')
+    .select('name, location, is_active')
+    .eq('donor_id', user_id)
+    .single();
+
+  if (donor) {
+    return {
+      success: true,
+      status: 200,
+      data: {
+        ...user,
+        ...donor,
+      },
+    };
+  }
+
+  if (donorError && donorError.code !== 'PGRST116') {
+    throw new Error(donorError.message);
+  }
+
+  // Step 4: Return user without profile if none found
+  return {
+    success: true,
+    status: 200,
+    data: {
+      ...user,
+      name: null,
+      location: null,
+      is_active: null,
+    },
+  };
+}
 };

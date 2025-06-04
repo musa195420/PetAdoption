@@ -56,15 +56,24 @@ module.exports = {
     },
 
     updateMessage: async (data) => {
-        const { message_id, content } = data;
+        const { message_id, content,sender_id,receiver_id ,timestamp} = data;
 
         const { data: result, error } = await supabase
             .from("message")
-            .update({ content })
+            .update({ content,sender_id,receiver_id,timestamp })
             .eq("message_id", message_id)
             .select();
 
         if (error) throw new Error(error.message);
         return result;
     },
+
+    getChatUsers: async (user_id) => {
+    const { data: result, error } = await supabase.rpc('get_conversations_with_last_message', {
+        current_user_id: user_id
+    });
+
+    if (error) throw new Error(error.message);
+    return result;
+},
 };
