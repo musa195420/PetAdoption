@@ -213,6 +213,8 @@ module.exports = {
 
   return imageUrl;
 },
+
+
 getFullUserDataById: async (user_id) => {
   // Step 1: Fetch user data
   const { data: user, error: userError } = await supabase
@@ -234,12 +236,10 @@ getFullUserDataById: async (user_id) => {
 
   if (adopter) {
     return {
-      success: true,
-      status: 200,
-      data: {
+      
         ...user,
         ...adopter,
-      },
+      
     };
   }
 
@@ -256,12 +256,10 @@ getFullUserDataById: async (user_id) => {
 
   if (donor) {
     return {
-      success: true,
-      status: 200,
-      data: {
+     
         ...user,
         ...donor,
-      },
+      
     };
   }
 
@@ -271,14 +269,12 @@ getFullUserDataById: async (user_id) => {
 
   // Step 4: Return user without profile if none found
   return {
-    success: true,
-    status: 200,
-    data: {
+    
       ...user,
       name: null,
       location: null,
       is_active: null,
-    },
-  };
-}
+    
+}}
+
 };
