@@ -7,6 +7,7 @@ const {
     deleteMessage,
     getChatUsers
 } = require("./message.service");
+const { getIoInstance } = require("../../socketInstance"); 
 
 module.exports = {
     sendMessage: async (req, res) => {
@@ -59,30 +60,41 @@ module.exports = {
     },
 
     deleteMessage: async (req, res) => {
-        try {
-            const { message_id } = req.body;
-            const result = await deleteMessage(message_id);
-    
-            if (!result || result.length === 0) {
-                return res.status(404).json({ success: false, message: "Message not found", status: 404 });
-            }
-    
-            res.status(200).json({ success: true, message: "Message deleted", data: result, status: 200 });
-        } catch (err) {
-            res.status(500).json({ success: false, message: err.message, status: 500 });
-        }
-    },
+  try {
+    const { message_id, sender_id, receiver_id } = req.body;
+
+    const result = await deleteMessage(message_id);
+
+    console.log("Message Deleted with Id",result);
+
+    // Emit to the chat room
+    const io = getIoInstance();
+    const roomId = [sender_id, receiver_id].sort().join('_');
+    io.to(roomId).emit("deleteMessage", { message_id });
+
+    res.status(200).json({ success: true, message: "Message deleted", data: result, status: 200 });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message, status: 500 });
+  }
+},
 
     updateMessage: async (req, res) => {
-        try {
-            const result = await updateMessage(req.body);
+  try {
+    const result = await updateMessage(req.body);
 
-            if (!result.length)
-                return res.status(404).json({ success: false, message: "Message not found", status: 404 });
+    if (!result.length)
+      return res.status(404).json({ success: false, message: "Message not found", status: 404 });
 
-            res.status(200).json({ success: true, message: "Message updated", data: result, status: 200 });
-        } catch (err) {
-            res.status(500).json({ success: false, message: err.message, status: 500 });
-        }
-    },
+    // Emit to the chat room
+    const io = getIoInstance();
+    const { sender_id, receiver_id } = req.body;
+    const roomId = [sender_id, receiver_id].sort().join('_');
+
+    io.to(roomId).emit("updateMessage", result[0]);
+
+    res.status(200).json({ success: true, message: "Message updated", data: result, status: 200 });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message, status: 500 });
+  }
+},
 };
