@@ -1,31 +1,151 @@
-{
-  "name": "petadoption",
-  "version": "1.0.0",
-  "description": "# PetAdoption",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js",
-    "start": "node app.js",
-    "build": "echo \"No build step necessary\""
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@hapi/joi": "^17.1.1",
-    "@supabase/supabase-js": "^2.49.4",
-    "@types/hapi__joi": "^17.1.15",
-    "bcrypt": "^5.1.1",
-    "dotenv": "^16.4.7",
-    "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "multer": "^1.4.5-lts.2",
-    "mysql": "^2.18.1",
-    "winston": "^3.17.0",
-    "winston-mongodb": "^6.0.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.9"
-  }
-}
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
+
+CREATE TABLE public.adopterprofile (
+  adopter_id uuid NOT NULL,
+  name character varying NOT NULL,
+  location character varying,
+  is_active boolean DEFAULT true,
+  CONSTRAINT adopterprofile_pkey PRIMARY KEY (adopter_id),
+  CONSTRAINT adopterprofile_adopter_id_fkey FOREIGN KEY (adopter_id) REFERENCES public.users(user_id)
+);
+CREATE TABLE public.animaltype (
+  animal_id uuid NOT NULL DEFAULT gen_random_uuid(),
+  name character varying NOT NULL,
+  CONSTRAINT animaltype_pkey PRIMARY KEY (animal_id)
+);
+CREATE TABLE public.breed (
+  breed_id uuid NOT NULL DEFAULT gen_random_uuid(),
+  animal_id uuid,
+  name character varying NOT NULL,
+  CONSTRAINT breed_pkey PRIMARY KEY (breed_id),
+  CONSTRAINT breed_animal_id_fkey FOREIGN KEY (animal_id) REFERENCES public.animaltype(animal_id)
+);
+CREATE TABLE public.disability (
+  disability_id uuid NOT NULL DEFAULT gen_random_uuid(),
+  animal_id uuid,
+  name character varying NOT NULL,
+  description text,
+  CONSTRAINT disability_pkey PRIMARY KEY (disability_id),
+  CONSTRAINT disability_animal_id_fkey FOREIGN KEY (animal_id) REFERENCES public.animaltype(animal_id)
+);
+CREATE TABLE public.disease (
+  disease_id uuid NOT NULL DEFAULT gen_random_uuid(),
+  animal_id uuid,
+  name character varying NOT NULL,
+  description text,
+  CONSTRAINT disease_pkey PRIMARY KEY (disease_id),
+  CONSTRAINT disease_animal_id_fkey FOREIGN KEY (animal_id) REFERENCES public.animaltype(animal_id)
+);
+CREATE TABLE public.donorprofile (
+  donor_id uuid NOT NULL,
+  name character varying NOT NULL,
+  location character varying,
+  is_active boolean DEFAULT true,
+  CONSTRAINT donorprofile_pkey PRIMARY KEY (donor_id),
+  CONSTRAINT donorprofile_donor_id_fkey FOREIGN KEY (donor_id) REFERENCES public.users(user_id)
+);
+CREATE TABLE public.favorites (
+  fav_id uuid NOT NULL DEFAULT gen_random_uuid(),
+  user_id uuid,
+  pet_id uuid,
+  created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT favorites_pkey PRIMARY KEY (fav_id),
+  CONSTRAINT favorites_pet_id_fkey FOREIGN KEY (pet_id) REFERENCES public.pet(pet_id),
+  CONSTRAINT favorites_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(user_id)
+);
+CREATE TABLE public.healthinfo (
+  health_id uuid NOT NULL DEFAULT gen_random_uuid(),
+  pet_id uuid,
+  vaccination_id uuid,
+  disease_id uuid,
+  disability_id uuid,
+  CONSTRAINT healthinfo_pkey PRIMARY KEY (health_id),
+  CONSTRAINT healthinfo_pet_id_fkey FOREIGN KEY (pet_id) REFERENCES public.pet(pet_id),
+  CONSTRAINT healthinfo_vaccination_id_fkey FOREIGN KEY (vaccination_id) REFERENCES public.vaccination(vaccine_id),
+  CONSTRAINT healthinfo_disability_id_fkey FOREIGN KEY (disability_id) REFERENCES public.disability(disability_id),
+  CONSTRAINT healthinfo_disease_id_fkey FOREIGN KEY (disease_id) REFERENCES public.disease(disease_id)
+);
+CREATE TABLE public.meetuprequest (
+  meetup_id uuid NOT NULL DEFAULT gen_random_uuid(),
+  pet_id uuid,
+  donor_id uuid,
+  adopter_id uuid,
+  location character varying,
+  time timestamp without time zone,
+  is_accepted_by_donor boolean DEFAULT false,
+  is_accepted_by_adopter boolean DEFAULT false,
+  created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+  latitude character varying,
+  longitude character varying,
+  donor_verification_request character varying DEFAULT 'Applied'::character varying,
+  adopter_verification_request character varying DEFAULT 'Applied'::character varying,
+  CONSTRAINT meetuprequest_pkey PRIMARY KEY (meetup_id),
+  CONSTRAINT meetuprequest_adopter_id_fkey FOREIGN KEY (adopter_id) REFERENCES public.adopterprofile(adopter_id),
+  CONSTRAINT meetuprequest_pet_id_fkey FOREIGN KEY (pet_id) REFERENCES public.pet(pet_id),
+  CONSTRAINT meetuprequest_donor_id_fkey FOREIGN KEY (donor_id) REFERENCES public.donorprofile(donor_id)
+);
+CREATE TABLE public.message (
+  message_id uuid NOT NULL DEFAULT gen_random_uuid(),
+  sender_id uuid,
+  receiver_id uuid,
+  content text NOT NULL,
+  timestamp timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT message_pkey PRIMARY KEY (message_id),
+  CONSTRAINT message_sender_id_fkey FOREIGN KEY (sender_id) REFERENCES public.users(user_id),
+  CONSTRAINT message_receiver_id_fkey FOREIGN KEY (receiver_id) REFERENCES public.users(user_id)
+);
+CREATE TABLE public.pet (
+  pet_id uuid NOT NULL DEFAULT gen_random_uuid(),
+  donor_id uuid,
+  name character varying NOT NULL,
+  animal_id uuid,
+  breed_id uuid,
+  age integer,
+  gender character varying,
+  description text,
+  is_approved character varying DEFAULT 'Pending'::character varying CHECK (is_approved::text = ANY (ARRAY['Pending'::character varying::text, 'Approved'::character varying::text, 'Rejected'::character varying::text])),
+  rejection_reason text,
+  is_live boolean DEFAULT false,
+  created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+  image text,
+  CONSTRAINT pet_pkey PRIMARY KEY (pet_id),
+  CONSTRAINT pet_donor_fk FOREIGN KEY (donor_id) REFERENCES public.users(user_id),
+  CONSTRAINT pet_animal_id_fkey FOREIGN KEY (animal_id) REFERENCES public.animaltype(animal_id),
+  CONSTRAINT pet_breed_id_fkey FOREIGN KEY (breed_id) REFERENCES public.breed(breed_id)
+);
+CREATE TABLE public.securemeetup (
+  secure_meetup_id uuid NOT NULL DEFAULT gen_random_uuid(),
+  meetup_id uuid,
+  proof_pic_url text,
+  adopter_id_front_url text,
+  adopter_id_back_url text,
+  phone_number character varying,
+  current_address text,
+  time timestamp without time zone,
+  submitted_by character varying CHECK (submitted_by::text = ANY (ARRAY['Donor'::character varying::text, 'Adopter'::character varying::text])),
+  approval USER-DEFINED DEFAULT 'Pending'::approval_status,
+  rejection_reason text,
+  CONSTRAINT securemeetup_pkey PRIMARY KEY (secure_meetup_id),
+  CONSTRAINT securemeetup_meetup_id_fkey FOREIGN KEY (meetup_id) REFERENCES public.meetuprequest(meetup_id)
+);
+CREATE TABLE public.users (
+  user_id uuid NOT NULL DEFAULT gen_random_uuid(),
+  email character varying NOT NULL UNIQUE,
+  phone_number character varying NOT NULL,
+  password text NOT NULL,
+  role character varying NOT NULL CHECK (role::text = ANY (ARRAY['Admin'::character varying::text, 'Adopter'::character varying::text, 'Donor'::character varying::text])),
+  device_id character varying,
+  created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+  profile_image text,
+  verified boolean DEFAULT false,
+  CONSTRAINT users_pkey PRIMARY KEY (user_id)
+);
+CREATE TABLE public.vaccination (
+  vaccine_id uuid NOT NULL DEFAULT gen_random_uuid(),
+  animal_id uuid,
+  name character varying NOT NULL,
+  description text,
+  CONSTRAINT vaccination_pkey PRIMARY KEY (vaccine_id),
+  CONSTRAINT vaccination_animal_id_fkey FOREIGN KEY (animal_id) REFERENCES public.animaltype(animal_id)
+);

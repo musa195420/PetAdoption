@@ -41,6 +41,8 @@ module.exports = {
       throw new Error(err.message);
     }
   },
+
+
   getAllPetsWithUserEmail: async () => {
     try {
       const { data: pets, error } = await supabase
@@ -76,21 +78,41 @@ const petsWithDetails = pets.map(pet => ({
   
   
   
+getPetById: async (id) => {
+  try {
+    const { data: pet, error } = await supabase
+      .from("pets_with_donor_details")
+      .select("*")
+      .eq("pet_id", id)
+      .single();
 
-  getPetById: async (id) => {
-    try {
-      const { data: result, error } = await supabase
-        .from("pet")
-        .select("*")
-        .eq("pet_id", id)
-        .single();
+    if (error) throw error;
 
-      if (error) throw error;
-      return result;
-    } catch (err) {
-      throw new Error(err.message);
-    }
-  },
+    const petWithDetails = {
+      pet_id: pet.pet_id,
+      donor_id: pet.donor_id,
+      name: pet.name,
+      age: pet.age,
+      gender: pet.gender,
+      description: pet.description,
+      is_approved: pet.is_approved,
+      rejection_reason: pet.rejection_reason,
+      is_live: pet.is_live,
+      created_at: pet.created_at,
+      image: pet.image,
+      breed_id: pet.breed_id,
+      animal_id: pet.animal_id,
+      animal: pet.animal_name,
+      breed: pet.breed_name,
+      user_email: pet.user_email,
+      location: pet.donor_location
+    };
+
+    return petWithDetails;
+  } catch (err) {
+    throw new Error("Failed to fetch pet by ID: " + err.message);
+  }
+},
 
   deletePet: async (pet_id) => {
     try {
@@ -122,6 +144,7 @@ const petsWithDetails = pets.map(pet => ({
   
   getPetsByDonorId: async (donor_id) => {
     try {
+     // console.log("Donor_id ==>",donor_id);
       const { data: results, error } = await supabase
         .from("pet")
         .select(`

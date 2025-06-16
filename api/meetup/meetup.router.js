@@ -7,6 +7,7 @@ const {
     remove,
     getByUser,
     getByPet,
+    getBetweenUsers
 } = require("./meetup.controller");
 
 router.post("/", create);
@@ -16,5 +17,6 @@ router.patch("/", update);
 router.delete("/", remove);             // ID in body
 router.post("/user", getByUser);   // user_id in body
 router.post("/pet", getByPet);     // pet_id in body
+router.post("/between-users", getBetweenUsers);
 
 module.exports = router;

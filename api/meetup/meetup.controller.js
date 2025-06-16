@@ -6,6 +6,7 @@ const {
     deleteMeetup,
     getMeetupsByUser,
     getMeetupsByPet,
+    getMeetupBetweenUsers
 } = require("./meetup.service");
 
 module.exports = {
@@ -93,4 +94,28 @@ module.exports = {
             res.status(500).json({ status: 500, success: false, message: err.message });
         }
     },
+
+ getBetweenUsers : async (req, res) => {
+  try {
+    const { user_id, receiver_id } = req.body;
+
+    if (!user_id || !receiver_id) {
+      return res
+        .status(400)
+        .json({ status: 400, success: false, message: "user_id and receiver_id are required." });
+    }
+
+    const meetup = await getMeetupBetweenUsers(user_id, receiver_id);
+
+    if (!meetup) {
+      return res
+        .status(404)
+        .json({ status: 404, success: false, message: "No meetup found between these users." });
+    }
+
+    res.status(200).json({ success: true, data: meetup });
+  } catch (err) {
+    res.status(500).json({ status: 500, success: false, message: err.message });
+  }
+}
 };

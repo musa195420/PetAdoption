@@ -219,7 +219,7 @@ getFullUserDataById: async (user_id) => {
   // Step 1: Fetch user data
   const { data: user, error: userError } = await supabase
     .from('users')
-    .select('user_id, email, phone_number, role, device_id, created_at, profile_image')
+    .select('user_id, email, phone_number, role, device_id, created_at, profile_image,verified')
     .eq('user_id', user_id)
     .single();
 
