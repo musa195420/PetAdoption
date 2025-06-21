@@ -13,19 +13,19 @@ module.exports = {
 
   getMeetups: async () => {
     const { data, error } = await supabase.from("meetuprequest").select(`
-            meetup_id,
-            pet_id,
-            donor_id,
-            adopter_id,
-            location,
-            time,
-            created_at,
-            is_accepted_by_donor,
-            is_accepted_by_adopter,
-            adopter:adopter_id ( name ),
-            donor:donor_id ( name ),
-            pet ( name )
-          `);
+      meetup_id,
+      pet_id,
+      donor_id,
+      adopter_id,
+      location,
+      time,
+      created_at,
+      is_accepted_by_donor,
+      is_accepted_by_adopter,
+      adopter:adopter_id ( email ),
+      donor:donor_id ( email ),
+      pet ( name )
+    `);
 
     if (error) throw new Error(error.message);
 
@@ -39,8 +39,8 @@ module.exports = {
       is_accepted_by_donor: meetup.is_accepted_by_donor,
       is_accepted_by_adopter: meetup.is_accepted_by_adopter,
       created_at: meetup.created_at,
-      adopter_name: meetup.adopter?.name || null,
-      donor_name: meetup.donor?.name || null,
+      adopter_email: meetup.adopter?.email || null,
+      donor_email: meetup.donor?.email || null,
       pet_name: meetup.pet?.name || null,
     }));
   },
@@ -48,26 +48,24 @@ module.exports = {
   getMeetupById: async (meetup_id) => {
     const { data, error } = await supabase
       .from("meetuprequest")
-      .select(
-        `
-              meetup_id,
-              pet_id,
-              donor_id,
-              adopter_id,
-              location,
-              latitude,
-              longitude,
-              time,
-               rejection_reason,
-              add_verification,
-              created_at,
-               is_accepted_by_donor,
-            is_accepted_by_adopter,
-              adopter:adopter_id ( name ),
-              donor:donor_id ( name ),
-              pet ( name )
-            `
-      )
+      .select(`
+        meetup_id,
+        pet_id,
+        donor_id,
+        adopter_id,
+        location,
+        latitude,
+        longitude,
+        time,
+        rejection_reason,
+        add_verification,
+        created_at,
+        is_accepted_by_donor,
+        is_accepted_by_adopter,
+        adopter:adopter_id ( email ),
+        donor:donor_id ( email ),
+        pet ( name )
+      `)
       .eq("meetup_id", meetup_id)
       .single();
 
@@ -87,8 +85,8 @@ module.exports = {
       is_accepted_by_donor: data.is_accepted_by_donor,
       is_accepted_by_adopter: data.is_accepted_by_adopter,
       created_at: data.created_at,
-      adopter_name: data.adopter?.name || null,
-      donor_name: data.donor?.name || null,
+      adopter_email: data.adopter?.email || null,
+      donor_email: data.donor?.email || null,
       pet_name: data.pet?.name || null,
     };
   },
@@ -96,26 +94,24 @@ module.exports = {
   getMeetupsByUser: async (user_id) => {
     const { data, error } = await supabase
       .from("meetuprequest")
-      .select(
-        `
-          meetup_id,
-          pet_id,
-          donor_id,
-          adopter_id,
-          location,
-          latitude,
-          longitude,
-          time,
-          created_at,
-           is_accepted_by_donor,
-            is_accepted_by_adopter,
-           rejection_reason,
-              add_verification,
-          adopter:adopter_id ( name ),
-          donor:donor_id ( name ),
-          pet ( name )
-        `
-      )
+      .select(`
+        meetup_id,
+        pet_id,
+        donor_id,
+        adopter_id,
+        location,
+        latitude,
+        longitude,
+        time,
+        created_at,
+        is_accepted_by_donor,
+        is_accepted_by_adopter,
+        rejection_reason,
+        add_verification,
+        adopter:adopter_id ( email ),
+        donor:donor_id ( email ),
+        pet ( name )
+      `)
       .or(`donor_id.eq.${user_id},adopter_id.eq.${user_id}`);
 
     if (error) throw new Error(error.message);
@@ -134,42 +130,39 @@ module.exports = {
       is_accepted_by_adopter: meetup.is_accepted_by_adopter,
       rejection_reason: meetup.rejection_reason,
       add_verification: meetup.add_verification,
-      adopter_name: meetup.adopter?.name || null,
-      donor_name: meetup.donor?.name || null,
+      adopter_email: meetup.adopter?.email || null,
+      donor_email: meetup.donor?.email || null,
       pet_name: meetup.pet?.name || null,
     }));
   },
 
-  // ADD this to the export list at the bottom ↓
   getMeetupBetweenUsers: async (user_id, receiver_id) => {
     const { data, error } = await supabase
       .from("meetuprequest")
-      .select(
-        `
-      meetup_id,
-      pet_id,
-      donor_id,
-      adopter_id,
-      location,
-      latitude,
-      longitude,
-      time,
-      created_at,
-      rejection_reason,
-       is_accepted_by_donor,
-            is_accepted_by_adopter,
-      add_verification,
-      adopter:adopter_id ( name ),
-      donor:donor_id ( name ),
-      pet ( name )
-    `
-      )
+      .select(`
+        meetup_id,
+        pet_id,
+        donor_id,
+        adopter_id,
+        location,
+        latitude,
+        longitude,
+        time,
+        created_at,
+        rejection_reason,
+        is_accepted_by_donor,
+        is_accepted_by_adopter,
+        add_verification,
+        adopter:adopter_id ( email ),
+        donor:donor_id ( email ),
+        pet ( name )
+      `)
       .or(
         `and(donor_id.eq.${user_id},adopter_id.eq.${receiver_id}),and(donor_id.eq.${receiver_id},adopter_id.eq.${user_id})`
       )
-      .order("created_at", { ascending: false }) // return most recent first
+      .order("created_at", { ascending: false })
       .limit(1)
-      .maybeSingle(); // safe: only one result max, or null if none
+      .maybeSingle();
 
     if (error) throw new Error(error.message);
     if (!data) return null;
@@ -188,35 +181,31 @@ module.exports = {
       is_accepted_by_adopter: data.is_accepted_by_adopter,
       rejection_reason: data.rejection_reason,
       add_verification: data.add_verification,
-      adopter_name: data.adopter?.name || null,
-      donor_name: data.donor?.name || null,
+      adopter_email: data.adopter?.email || null,
+      donor_email: data.donor?.email || null,
       pet_name: data.pet?.name || null,
     };
   },
 
-  // include the new function in the module exports
-
   getMeetupsByPet: async (pet_id) => {
     const { data, error } = await supabase
       .from("meetuprequest")
-      .select(
-        `
-              meetup_id,
-              pet_id,
-              donor_id,
-              adopter_id,
-              location,
-              time,
-              created_at,
-              rejection_reason,
-              add_verification,
-               is_accepted_by_donor,
-            is_accepted_by_adopter,
-              adopter:adopter_id ( name ),
-              donor:donor_id ( name ),
-              pet ( name )
-            `
-      )
+      .select(`
+        meetup_id,
+        pet_id,
+        donor_id,
+        adopter_id,
+        location,
+        time,
+        created_at,
+        rejection_reason,
+        add_verification,
+        is_accepted_by_donor,
+        is_accepted_by_adopter,
+        adopter:adopter_id ( email ),
+        donor:donor_id ( email ),
+        pet ( name )
+      `)
       .eq("pet_id", pet_id);
 
     if (error) throw new Error(error.message);
@@ -233,8 +222,8 @@ module.exports = {
       is_accepted_by_donor: meetup.is_accepted_by_donor,
       is_accepted_by_adopter: meetup.is_accepted_by_adopter,
       created_at: meetup.created_at,
-      adopter_name: meetup.adopter?.name || null,
-      donor_name: meetup.donor?.name || null,
+      adopter_email: meetup.adopter?.email || null,
+      donor_email: meetup.donor?.email || null,
       pet_name: meetup.pet?.name || null,
     }));
   },
@@ -242,7 +231,6 @@ module.exports = {
   updateMeetup: async (data) => {
     const { meetup_id, ...fieldsToUpdate } = data;
 
-    // Filter out null or undefined values
     const filteredFields = Object.fromEntries(
       Object.entries(fieldsToUpdate).filter(
         ([_, v]) => v !== null && v !== undefined

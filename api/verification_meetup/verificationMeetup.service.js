@@ -19,7 +19,10 @@ module.exports = {
       'adopter_verification_status',
       'payment_status',
       'application_id',
-      'payment_id'
+      'payment_id',
+      'application_id',
+      'verification_id'
+
     ].join(',');
 
     const { data, error } = await supabase
@@ -38,7 +41,10 @@ module.exports = {
         adopter_verification_status,
         payment_status,
         application_id,
-        payment_id
+        payment_id,
+       
+      application_id,
+      verification_id
       `)
       .eq("meetup_id", meetup_id)
       .single();

@@ -38,7 +38,10 @@ const routes = {
   favourites: require('./api/favourite/favourite.router'),
   meetups: require('./api/meetup/meetup.router'),
   secureMeetups: require('./api/secureMeetup/secureMeetup.router'),
-  verificationMeetupRouter: require("./api/verification_meetup/verificationMeetup.router")
+  verificationMeetupRouter: require("./api/verification_meetup/verificationMeetup.router"),
+  verificationUsersRouter: require("./api/verification_user/verificationUser.routes"),
+    paymentRouter: require("./api/payment/payment.routes"),
+     applicationRouter: require("./api/application/application.routes")
 };
 
 // Middleware
@@ -77,6 +80,11 @@ app.use('/api/donor', routes.donors);
 app.use('/api/adopter', routes.adopters);
 app.use('/api/users', routes.users);
 app.use("/api/verification-meetups", routes.verificationMeetupRouter);
+app.use("/api/verification-users", routes.verificationUsersRouter);
+app.use("/api/payment", routes.paymentRouter);
+app.use("/api/application", routes.applicationRouter);
+
+
 // Base API Check
 app.get('/api', async (req, res) => {
   res.json({
