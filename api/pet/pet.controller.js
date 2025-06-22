@@ -1,4 +1,4 @@
-const { createPet, getAllPets, getPetById, deletePet,getPetsByDonorId,uploadPetImageService,getAllPetsWithUserEmail,updatePet } = require("./pet.service");
+const { createPet, getAllPets, getPetById, deletePet,getPetsByDonorId,uploadPetImageService,getAllPetsWithUserEmail,updatePet ,getPetsByBreedId,getPetsByAnimalId} = require("./pet.service");
 
 module.exports = {
   createNewPet: async (req, res) => {
@@ -16,6 +16,41 @@ module.exports = {
       return res.status(500).json({
         success:false,status: 400,
         message: "Database Error: " + err.message
+      });
+    }
+  },
+fetchPetsByAnimalId: async (req, res) => {
+    const animalId = req.body.animal_id;
+
+    if (!animalId) {
+      return res.status(400).json({
+        success: false,
+        status: 400,
+        message: "Animal ID is required",
+      });
+    }
+
+    try {
+      const results = await getPetsByAnimalId(animalId);
+
+      if (!results || results.length === 0) {
+        return res.status(404).json({
+          success: false,
+          status: 404,
+          message: "No pets found for this animal type",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        status: 200,
+        data: results,
+      });
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        status: 500,
+        message: "Error fetching pets for animal: " + err.message,
       });
     }
   },
@@ -58,6 +93,40 @@ module.exports = {
       return res.status(500).json({
         success:false,status: 400,
         message: "Failed to fetch pets"
+      });
+    }
+  },
+   fetchPetsByBreedId: async (req, res) => {
+    const breedId = req.body.breed_id;      // or use req.params / req.query if you prefer
+    if (!breedId) {
+      return res.status(400).json({
+        success: false,
+        status: 400,
+        message: "Breed ID is required",
+      });
+    }
+
+    try {
+      const results = await getPetsByBreedId(breedId);
+
+      if (!results || results.length === 0) {
+        return res.status(404).json({
+          success: false,
+          status: 404,
+          message: "No pets found for this breed",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        status: 200,
+        data: results,
+      });
+    } catch (err) {
+      return res.status(500).json({
+        success: false,
+        status: 500,
+        message: "Error fetching pets for breed: " + err.message,
       });
     }
   },

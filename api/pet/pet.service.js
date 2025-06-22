@@ -76,8 +76,72 @@ const petsWithDetails = pets.map(pet => ({
     }
   },
   
-  
-  
+    getPetsByBreedId: async (breed_id) => {
+  try {
+    const { data: pets, error } = await supabase
+      // use the same convenience view you already query for e-mail + location
+      .from("pets_with_donor_details")
+      .select("*")
+      .eq("breed_id", breed_id);
+
+    if (error) throw error;
+
+    // keep the exact response shape you return in getAllPetsWithUserEmail
+    return pets.map(pet => ({
+      pet_id: pet.pet_id,
+      donor_id: pet.donor_id,
+      name: pet.name,
+      age: pet.age,
+      gender: pet.gender,
+      description: pet.description,
+      is_approved: pet.is_approved,
+      rejection_reason: pet.rejection_reason,
+      is_live: pet.is_live,
+      created_at: pet.created_at,
+      image: pet.image,
+      breed_id: pet.breed_id,
+      animal_id: pet.animal_id,
+      animal: pet.animal_name,
+      breed: pet.breed_name,
+      user_email: pet.user_email,
+      location: pet.donor_location
+    }));
+  } catch (err) {
+    throw new Error("Failed to fetch pets by breed: " + err.message);
+  }
+},
+  getPetsByAnimalId: async (animal_id) => {
+  try {
+    const { data: pets, error } = await supabase
+      .from("pets_with_donor_details")
+      .select("*")
+      .eq("animal_id", animal_id);
+
+    if (error) throw error;
+
+    return pets.map(pet => ({
+      pet_id: pet.pet_id,
+      donor_id: pet.donor_id,
+      name: pet.name,
+      age: pet.age,
+      gender: pet.gender,
+      description: pet.description,
+      is_approved: pet.is_approved,
+      rejection_reason: pet.rejection_reason,
+      is_live: pet.is_live,
+      created_at: pet.created_at,
+      image: pet.image,
+      breed_id: pet.breed_id,
+      animal_id: pet.animal_id,
+      animal: pet.animal_name,
+      breed: pet.breed_name,
+      user_email: pet.user_email,
+      location: pet.donor_location
+    }));
+  } catch (err) {
+    throw new Error("Failed to fetch pets by animal: " + err.message);
+  }
+},
 getPetById: async (id) => {
   try {
     const { data: pet, error } = await supabase
