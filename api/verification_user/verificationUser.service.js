@@ -63,7 +63,7 @@ module.exports = {
 getVerificationByVerificationId: async (verificationId) => {
   try {
     const { data, error } = await supabase
-      .from("verification")
+      .from("verification_user")
       .select("*")
       .eq("verification_id", verificationId)
       .single();
