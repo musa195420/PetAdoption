@@ -1,4 +1,4 @@
-const{    registerUser,getAllUsers,getUserById,updateUser,deleteUser,login,getUserByEmail,uploadUserImage,getProfileById,getUserFullDataById}= require("./user.controller");
+const{    registerUser,getAllUsers,getUserById,updateUser,deleteUser,login,getUserByEmail,uploadUserImage,getProfileById,getUserFullDataById,resetPassword}= require("./user.controller");
 const {addUserValdation} = require("../../validation/users/user.validation");
 const { refreshTokenHandler, logout } = require("../auth/refresh_token");
 const router = require ("express").Router();
@@ -19,5 +19,6 @@ router.post("/email",checkToken,getUserByEmail);
 router.post("/login",login);
 router.post("/token", refreshTokenHandler);
 router.post("/logout", logout);
+router.post("/reset-password", resetPassword);
 
 module.exports=router;

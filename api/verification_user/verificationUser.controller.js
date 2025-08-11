@@ -4,7 +4,7 @@ const {
   getAllVerificationUsers,
   getVerificationUserByUserId,
   updateVerificationUser,
-  deleteVerificationUser
+  deleteVerificationUser,uploadCnicPicService,uploadProofOfResidenceService
 } = require("./verificationUser.service");
 
 module.exports = {
@@ -86,7 +86,7 @@ module.exports = {
       return res.status(400).json({ success:false, message:"user_id and image are required" });
     }
 
-    const url = await verificationService.uploadCnicPicService(file, user_id);
+    const url = await uploadCnicPicService(file, user_id);
     return res.status(200).json({ success:true, url });
   } catch (err) {
     return res.status(500).json({ success:false, message: err.message });
@@ -103,7 +103,7 @@ uploadProofOfResidence: async (req, res) => {
       return res.status(400).json({ success:false, message:"user_id and image are required" });
     }
 
-    const url = await verificationService.uploadProofOfResidenceService(file, user_id);
+    const url = await uploadProofOfResidenceService(file, user_id);
     return res.status(200).json({ success:true, url });
   } catch (err) {
     return res.status(500).json({ success:false, message: err.message });

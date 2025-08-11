@@ -7,24 +7,27 @@ module.exports = {
   /* ------------------------------------------------------------------ */
   createVerificationUser: async (data) => {
     try {
-      const { data: result, error } = await supabase
-        .from("verification_user")
-        .insert([
-          {
-            user_id:           data.user_id,
-            cnic_pic:          data.cnic_pic,
-            address:           data.address,
-            proof_of_residence:data.proof_of_residence,
-            submitted_at:      new Date()
-          }
-        ])
-        .select("*");
+    // Remove null/undefined fields so they don't overwrite existing ones
+    const filteredData = Object.fromEntries(
+      Object.entries({
+        user_id: data.user_id,
+        cnic_pic: data.cnic_pic,
+        address: data.address,
+        proof_of_residence: data.proof_of_residence,
+        submitted_at: new Date()
+      }).filter(([_, v]) => v !== null && v !== undefined)
+    );
 
-      if (error) throw error;
-      return result?.[0];
-    } catch (err) {
-      throw new Error("Failed to create verification: " + err.message);
-    }
+    const { data: result, error } = await supabase
+      .from("verification_user")
+      .upsert(filteredData, { onConflict: "user_id" }) // Requires UNIQUE constraint on user_id
+      .select("*");
+
+    if (error) throw error;
+    return result?.[0];
+  } catch (err) {
+    throw new Error("Failed to create/update verification: " + err.message);
+  }
   },
 
   /* ------------------------------------------------------------------ */

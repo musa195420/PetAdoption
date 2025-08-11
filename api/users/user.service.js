@@ -1,5 +1,5 @@
 const supabase = require("../../config/database");
-
+const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 module.exports = {
   createUser: async (data) => {
     const { email, phone_number, password, role, device_id } = data;
@@ -12,6 +12,40 @@ module.exports = {
   
     return result[0]; // return the object directly
   },
+
+   updateUserPasswordByEmail: async (email, newPassword) => {
+    try {
+      if (!email || !newPassword) {
+        throw new Error("Email and newPassword are required");
+      }
+
+      // Hash the new password before saving
+      const salt = genSaltSync(10);
+      const hashedPassword = hashSync(newPassword, salt);
+
+      // Update password for user with given email
+      const { data, error } = await supabase
+        .from('users')
+        .update({ password: hashedPassword })
+        .eq('email', email)
+        .select();
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      // data will be an array of updated rows
+      if (data.length === 0) {
+        // No user found with that email
+        return null;
+      }
+
+      return data[0];  // Return updated user object
+    } catch (err) {
+      throw new Error(`Failed to update password: ${err.message}`);
+    }
+  },
+
 
   getUserById: async (id) => {
     const { data: user, error } = await supabase

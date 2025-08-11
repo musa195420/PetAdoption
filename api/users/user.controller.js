@@ -5,7 +5,7 @@ const {
   updateUser,
   deleteUser,
   getUserByEmail,uploadUserImageService,
-  getProfileById,getFullUserDataById
+  getProfileById,getFullUserDataById,updateUserPasswordByEmail
 } = require("./user.service");
 require("dotenv").config();
 
@@ -38,6 +38,50 @@ module.exports = {
       return res.status(500).json({ success:false,status: 400, message: "DB error", error: err.message });
     }
   },
+
+   resetPassword : async (req, res) => { 
+   try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        data: {
+          success: false,
+          status: 400,
+          message: "Email and newPassword are required."
+        }
+      });
+    }
+
+    const updatedUser = await updateUserPasswordByEmail(email, password);
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        data: {
+          success: false,
+          status: 404,
+          message: "User not found with this email."
+        }
+      });
+    }
+
+    return res.status(200).json({
+      data: {
+        success: true,
+        status: 200,
+        message: "Password Changed"
+      }
+    });
+  } catch (err) {
+    return res.status(500).json({
+      data: {
+        success: false,
+        status: 500,
+        message: "Server error: " + err.message
+      }
+    });
+  }
+},
 
   login: async (req, res) => {
     try {
