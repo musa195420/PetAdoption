@@ -9,7 +9,7 @@ const {
   updateVerificationById,
   deleteVerificationById,
   uploadCnicPic,
-  uploadProofOfResidence
+  uploadProofOfResidence,fetchVerificationByVerificationId
 } = require("./verificationUser.controller");
 
 // ── IMAGE UPLOADS ──────────────────────────────────────────────────────
@@ -17,7 +17,8 @@ router.post("/upload-cnic",   checkToken, upload.single("image"), uploadCnicPic)
 router.post("/upload-proof",  checkToken, upload.single("image"), uploadProofOfResidence);
 
 // ── CRUD ───────────────────────────────────────────────────────────────
-router.post("/",          checkToken, createNewVerification);         // CREATE
+router.post("/",          checkToken, createNewVerification);  
+router.post("/verif-id",           checkToken, fetchVerificationByVerificationId);         // CREATE
 router.get("/",           checkToken, fetchAllVerifications);         // READ ALL
 router.post("/id",        checkToken, fetchVerificationByUserId);     // READ single (body = { user_id })
 router.patch("/update",   checkToken, updateVerificationById);        // UPDATE   (body = { verification_id, ... })

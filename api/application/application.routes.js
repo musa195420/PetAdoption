@@ -3,7 +3,7 @@ const {
   createNewApplication,
   fetchAllApplications,
   fetchApplicationsByUserId,
-  deleteApplication,updateApplication
+  deleteApplication,updateApplication,fetchApplicationByApplicationId
 } = require("./application.controller");
 
 const { checkToken } = require("../auth/token_validation");
@@ -13,6 +13,7 @@ router.post("/", checkToken, createNewApplication);
 
 // GET: Fetch all applications
 router.get("/", checkToken, fetchAllApplications);
+router.post("/id", checkToken, fetchApplicationByApplicationId);
 
 // POST: Fetch applications by user_id
 router.post("/user", checkToken, fetchApplicationsByUserId);

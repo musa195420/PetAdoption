@@ -2,7 +2,7 @@ const {
   createPayment,
   getAllPayments,
   getPaymentByUserId,
-  deletePaymentById,createPaymentIntent
+  deletePaymentById,createPaymentIntent,getPaymentByPaymentId
 } = require("./payment.service");
 
 module.exports = {
@@ -104,6 +104,34 @@ module.exports = {
       });
     }
   },
+fetchPaymentByPaymentId: async (req, res) => {
+  try {
+    const { payment_id } = req.body;
+    if (!payment_id) {
+      return res.status(400).json({
+        success: false,
+        status: 400,
+        message: "payment_id is required",
+        data: null,
+      });
+    }
+
+    const result = await getPaymentByPaymentId(payment_id);
+    res.status(200).json({
+      success: true,
+      status: 200,
+      message: "Payment fetched by ID",
+      data: result, // or just result if using .single()
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      status: 500,
+      message: err.message,
+      data: null,
+    });
+  }
+},
 
   deletePayment: async (req, res) => {
     try {

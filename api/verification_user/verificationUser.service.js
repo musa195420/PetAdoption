@@ -60,7 +60,20 @@ module.exports = {
       throw new Error("Failed to fetch verification by user: " + err.message);
     }
   },
+getVerificationByVerificationId: async (verificationId) => {
+  try {
+    const { data, error } = await supabase
+      .from("verification")
+      .select("*")
+      .eq("verification_id", verificationId)
+      .single();
 
+    if (error) throw error;
+    return data;
+  } catch (err) {
+    throw new Error("Failed to fetch verification by ID: " + err.message);
+  }
+},
   /* ------------------------------------------------------------------ */
   /*  UPDATE                                                            */
   /* ------------------------------------------------------------------ */

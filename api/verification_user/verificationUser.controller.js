@@ -4,7 +4,7 @@ const {
   getAllVerificationUsers,
   getVerificationUserByUserId,
   updateVerificationUser,
-  deleteVerificationUser,uploadCnicPicService,uploadProofOfResidenceService
+  deleteVerificationUser,uploadCnicPicService,uploadProofOfResidenceService,getVerificationByVerificationId
 } = require("./verificationUser.service");
 
 module.exports = {
@@ -52,6 +52,31 @@ module.exports = {
     return res.status(500).json({ success:false, message: err.message });
   }
 },
+
+fetchVerificationByVerificationId: async (req, res) => {
+  try {
+    const { verification_id } = req.body;
+    if (!verification_id) {
+      return res.status(400).json({
+        success: false,
+        message: "verification_id is required",
+      });
+    }
+
+    const data = await getVerificationByVerificationId(verification_id);
+
+    return res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+},
+
   /* ------------------------------------------------------------------ */
   /*  UPDATE                                                            */
   /* ------------------------------------------------------------------ */

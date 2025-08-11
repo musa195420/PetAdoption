@@ -67,6 +67,20 @@ module.exports = {
       throw new Error("Failed to fetch payments for user: " + err.message);
     }
   },
+  getPaymentByPaymentId: async (paymentId) => {
+  try {
+    const { data, error } = await supabase
+      .from("payments")
+      .select("*")
+      .eq("payment_id", paymentId)
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (err) {
+    throw new Error("Failed to fetch payment by ID: " + err.message);
+  }
+},
 
   deletePaymentById: async (paymentId) => {
     try {

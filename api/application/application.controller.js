@@ -2,7 +2,7 @@ const {
   createApplication,
   getAllApplications,
   getApplicationByUserId,
-  deleteApplicationById,updateApplicationById
+  deleteApplicationById,updateApplicationById,getApplicationByApplicationId
 } = require("./application.service");
 
 module.exports = {
@@ -45,6 +45,19 @@ module.exports = {
       res.status(500).json({ message: err.message });
     }
   },
+  fetchApplicationByApplicationId: async (req, res) => {
+  try {
+    const { application_id } = req.body;
+    const result = await getApplicationByApplicationId(application_id);
+
+    res.status(200).json({
+      success: true,
+      data: result[0] // assuming application_id is unique
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+},
 
   deleteApplication: async (req, res) => {
     try {

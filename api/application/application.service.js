@@ -47,6 +47,20 @@ module.exports = {
     }
   },
 
+  getApplicationByApplicationId: async (applicationId) => {
+  try {
+    const { data, error } = await supabase
+      .from("application")
+      .select("*")
+      .eq("application_id", applicationId);
+
+    if (error) throw error;
+    return data;
+  } catch (err) {
+    throw new Error("Failed to fetch application by ID: " + err.message);
+  }
+},
+
   deleteApplicationById: async (applicationId) => {
     try {
       const { error } = await supabase
