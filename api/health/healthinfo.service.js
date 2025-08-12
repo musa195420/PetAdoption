@@ -115,22 +115,38 @@ module.exports = {
 },
 
 
-   update: async (data) => {
-   const { health_id, ...updates } = data;
+  update: async (data) => {
+  const { health_id, ...updates } = data;
 
-    // Remove null/undefined values
-    const filteredData = Object.fromEntries(
-        Object.entries(data).filter(([_, value]) => value !== null && value !== undefined)
+  if (!health_id) {
+    // Insert new record, no health_id specified, will auto-generate
+    const filteredInsert = Object.fromEntries(
+      Object.entries(updates).filter(([_, v]) => v !== null && v !== undefined)
     );
 
-    const { data: result, error } = await supabase
-        .from("healthinfo")
-        .upsert(filteredData, { onConflict: ["health_id"] }) // Uses primary/unique key
-        .select();
+    const { data: inserted, error } = await supabase
+      .from('healthinfo')
+      .insert(filteredInsert)
+      .select();
 
     if (error) throw error;
-    return result[0];
+    return inserted[0];
+  } else {
+    // Update existing record by health_id
+    const filteredUpdate = Object.fromEntries(
+      Object.entries(updates).filter(([_, v]) => v !== null && v !== undefined)
+    );
+
+    const { data: updated, error } = await supabase
+      .from('healthinfo')
+      .upsert({ health_id, ...filteredUpdate }, { onConflict: ['health_id'] })
+      .select();
+
+    if (error) throw error;
+    return updated[0];
+  }
 },
+
 
     deleteHealthInfo: async (health_id) => {
         const { data, error } = await supabase
