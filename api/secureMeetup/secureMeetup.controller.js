@@ -3,7 +3,7 @@ const {
     getAllSecureMeetups,
     getSecureMeetupById,
     updateSecureMeetup,
-    deleteSecureMeetup,uploadSecureMeetupImages
+    deleteSecureMeetup,uploadSecureMeetupImages,getSecureMeetupByMeetupId
 } = require("./secureMeetup.service");
 
 module.exports = {
@@ -29,6 +29,18 @@ module.exports = {
         try {
             const { secure_meetup_id } = req.body; // Get id from body
             const result = await getSecureMeetupById(secure_meetup_id);
+            if (!result) {
+                return res.status(404).json({ status: 404, success: false, message: "Not Found" });
+            }
+            res.status(200).json({ status: 200,success: true, data: result });
+        } catch (err) {
+            res.status(500).json({ status: 500, success: false, message: err.message });
+        }
+    },
+    getSecureMeetupByMeetup: async (req, res) => {
+        try {
+            const { meetup_id } = req.body; // Get id from body
+            const result = await getSecureMeetupByMeetupId(meetup_id);
             if (!result) {
                 return res.status(404).json({ status: 404, success: false, message: "Not Found" });
             }

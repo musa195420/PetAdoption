@@ -50,6 +50,21 @@ module.exports = {
         }
     },
 
+     getSecureMeetupByMeetupId: async (meetup_id) => {
+        try {
+            const { data: result, error } = await supabase
+                .from("securemeetup")
+                .select("*")
+                .eq("meetup_id", meetup_id)
+                .single(); // To fetch a single row
+            if (error) throw error;
+            return result;
+        } catch (err) {
+            throw new Error(err.message);
+        }
+    },
+
+
     updateSecureMeetup: async (data) => {
         try {
             const { secure_meetup_id, ...updateData } = data;
