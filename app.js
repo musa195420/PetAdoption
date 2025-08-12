@@ -1,5 +1,6 @@
 const express = require('express');
 require('dotenv').config();
+const os = require('os');
 const app = express();
 const logger = require('./config/logger');
 
@@ -110,6 +111,21 @@ app.use((err, req, res, next) => {
 });
 
 // Start HTTP server
-server.listen(process.env.APP_PORT, () => {
-  logger.info(`Server running on port ${process.env.APP_PORT}`);
+server.listen(process.env.APP_PORT, '0.0.0.0', () => {
+  const port = process.env.APP_PORT;
+  const interfaces = os.networkInterfaces();
+  let localIP = '127.0.0.1';
+
+  // Loop through interfaces to find a non-internal IPv4
+  for (const iface of Object.values(interfaces)) {
+    for (const detail of iface) {
+      if (detail.family === 'IPv4' && !detail.internal) {
+        localIP = detail.address;
+      }
+    }
+  }
+
+  console.log(`Server running on:`);
+  console.log(`  Local:   http://127.0.0.1:${port}`);
+  console.log(`  Network: http://${localIP}:${port}`);
 });

@@ -116,17 +116,16 @@ module.exports = {
 
 
    update: async (data) => {
-    const { health_id, ...updates } = data;
+   const { health_id, ...updates } = data;
 
-    // Remove fields with null or undefined values
-    const filteredUpdates = Object.fromEntries(
-        Object.entries(updates).filter(([_, value]) => value !== null && value !== undefined)
+    // Remove null/undefined values
+    const filteredData = Object.fromEntries(
+        Object.entries(data).filter(([_, value]) => value !== null && value !== undefined)
     );
 
     const { data: result, error } = await supabase
         .from("healthinfo")
-        .update(filteredUpdates)
-        .eq("health_id", health_id)
+        .upsert(filteredData, { onConflict: ["health_id"] }) // Uses primary/unique key
         .select();
 
     if (error) throw error;
